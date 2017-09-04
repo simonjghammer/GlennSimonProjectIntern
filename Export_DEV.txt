@@ -1,0 +1,4548 @@
+OBJECT Table 50000 Label Printers
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30-08-17;
+    Time=11:07:51;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+  }
+  FIELDS
+  {
+    { 1   ;   ;ID                  ;Integer       ;AutoIncrement=Yes;
+                                                   NotBlank=Yes;
+                                                   Description=Automatic increment, unique;
+                                                   Editable=No }
+    { 2   ;   ;Name                ;Text250       ;NotBlank=Yes }
+    { 3   ;   ;Description         ;Text250        }
+    { 4   ;   ;IP                  ;Text250       ;NotBlank=Yes }
+    { 5   ;   ;Domain Path         ;Text250       ;Description=Path to the printer that is installed }
+    { 6   ;   ;Printer Specifications;Integer     ;TableRelation="Printer Language Mapping".ID;
+                                                   NotBlank=Yes }
+    { 7   ;   ;LabelWidth          ;Decimal       ;NotBlank=Yes;
+                                                   Description=Stored in cm }
+    { 8   ;   ;LabelHeight         ;Decimal       ;NotBlank=Yes;
+                                                   Description=Stored in cm }
+    { 9   ;   ;DPI                 ;Integer       ;NotBlank=Yes;
+                                                   Description=Dots per inch }
+    { 10  ;   ;SetupDate           ;Date          ;Description=From when the printer was installed }
+    { 11  ;   ;In Use              ;Boolean       ;NotBlank=Yes;
+                                                   Description=Wether or not it is still in use. }
+  }
+  KEYS
+  {
+    {    ;ID                                      ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+    { 1   ;DropDown            ;Name,Description,IP,Domain Path,Printer Specifications,LabelWidth,LabelHeight,DPI,SetupDate,In Use }
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+
+OBJECT Table 50001 Printer Language Mapping
+{
+  OBJECT-PROPERTIES
+  {
+    Date=22-08-17;
+    Time=12:04:11;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+  }
+  FIELDS
+  {
+    { 1   ;   ;ID                  ;Integer       ;AutoIncrement=Yes;
+                                                   NotBlank=Yes;
+                                                   Editable=No }
+    { 2   ;   ;Brand               ;Text100        }
+    { 3   ;   ;Model               ;Text100        }
+    { 4   ;   ;Language            ;Option        ;OptionString=ZPL, Java, C#, Python, VBNet, HTML, JavaScript, CSS, PHP }
+  }
+  KEYS
+  {
+    {    ;ID                                      ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+    { 1   ;DropDown            ;ID,Brand,Model,Language                  }
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+
+OBJECT Table 50002 Printer Permissions
+{
+  OBJECT-PROPERTIES
+  {
+    Date=25-08-17;
+    Time=09:45:52;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+  }
+  FIELDS
+  {
+    { 1   ;   ;ID                  ;Integer       ;AutoIncrement=Yes;
+                                                   NotBlank=Yes }
+    { 2   ;   ;Printer ID          ;Integer       ;TableRelation="Label Printers".ID;
+                                                   NotBlank=Yes }
+    { 3   ;   ;User ID             ;Code50        ;TableRelation=User."User Name";
+                                                   NotBlank=Yes }
+  }
+  KEYS
+  {
+    {    ;ID                                      ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+
+OBJECT Table 95478 LabelPrinterTable
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30-08-17;
+    Time=10:07:26;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+  }
+  FIELDS
+  {
+    { 1   ;   ;id                  ;Integer       ;AutoIncrement=Yes;
+                                                   NotBlank=Yes }
+    { 2   ;   ;picture             ;BLOB          ;SubType=Bitmap }
+  }
+  KEYS
+  {
+    {    ;id                                      ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+
+OBJECT Table 95568 Logo Files
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01-09-17;
+    Time=09:41:36;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+  }
+  FIELDS
+  {
+    { 1   ;   ;ID                  ;Integer       ;AutoIncrement=Yes;
+                                                   Editable=No }
+    { 2   ;   ;LogoZPL             ;BLOB          ;SubType=Memo }
+    { 3   ;   ;Picture             ;BLOB          ;SubType=Bitmap }
+  }
+  KEYS
+  {
+    {    ;ID                                      ;Clustered=Yes }
+  }
+  FIELDGROUPS
+  {
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+
+OBJECT Report 50001 Print Item Label
+{
+  OBJECT-PROPERTIES
+  {
+    Date=29-08-17;
+    Time=11:15:42;
+    Modified=Yes;
+    Version List=CON018;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DAN=Print varelabel;
+               DEU=Drucke Artikeletikett;
+               ENU=Print Item Label];
+    ProcessingOnly=Yes;
+    OnPreReport=BEGIN
+
+                  //MESSAGE('Test Test');
+                END;
+
+  }
+  DATASET
+  {
+    { 1000000000;;DataItem;                  ;
+               DataItemTable=Table27;
+               MaxIteration=1;
+               OnAfterGetRecord=BEGIN
+                                  CallCodeUnit(1);
+                                END;
+
+               OnPostDataItem=VAR
+                                prefixtext1@1000000000 : Text[250];
+                                prefixtext2@1000000001 : Text[250];
+                              BEGIN
+                              END;
+
+               ReqFilterFields=No. }
+
+  }
+  REQUESTPAGE
+  {
+    PROPERTIES
+    {
+      SaveValues=Yes;
+      ActionList=ACTIONS
+      {
+        { 1000000007;  ;ActionContainer;
+                        Name=Preview;
+                        ActionContainerType=NewDocumentItems }
+        { 1000000012;1 ;Action    ;
+                        Name=View Preview As Picture;
+                        CaptionML=ENU=HejHej;
+                        OnAction=VAR
+                                   LabelPrinterFunctions@1000000000 : Codeunit 95478;
+                                 BEGIN
+                                   CallCodeUnit(2);
+                                 END;
+                                  }
+        { 1000000013;1 ;Action    ;
+                        Name=topeteoj;
+                        OnAction=BEGIN
+                                   MESSAGE('1234567');
+                                 END;
+                                  }
+        { 1000000014;1 ;Separator  }
+      }
+    }
+    CONTROLS
+    {
+      { 1000000000;0;Container;
+                  ContainerType=ContentArea }
+
+      { 1000000005;1;Group  ;
+                  GroupType=Group;
+                  Layout=Columns }
+
+      { 1000000001;2;Field  ;
+                  Name=NumberOfCopies;
+                  CaptionML=[DAN=Antal labels;
+                             DEU=Anzahl Etiketten;
+                             ENU=Number of copies];
+                  SourceExpr=NumberOfCopies;
+                  MinValue=1;
+                  MaxValue=50 }
+
+      { 1000000003;2;Field  ;
+                  Name=Row 1;
+                  SourceExpr=DataTextOption;
+                  Importance=Standard }
+
+      { 1000000004;2;Field  ;
+                  Name=Row 2;
+                  SourceExpr=DataTextOption2 }
+
+      { 1000000011;2;Field  ;
+                  Name=Row 3;
+                  SourceExpr=DataTextOption3 }
+
+      { 1000000008;2;Field  ;
+                  Name=Prefix;
+                  CaptionML=ENU=Include column name?;
+                  SourceExpr=Prefix }
+
+      { 1000000006;2;Field  ;
+                  Name=Type 1;
+                  CaptionML=ENU=Type row 1;
+                  SourceExpr=DataTypeOption }
+
+      { 1000000009;2;Field  ;
+                  Name=Type 2;
+                  CaptionML=ENU=Type row 2;
+                  SourceExpr=DataTypeOption2 }
+
+      { 1000000002;2;Field  ;
+                  Name=Type 3;
+                  CaptionML=ENU=Type row 3;
+                  SourceExpr=DataTypeOption3 }
+
+      { 1000000010;2;Field  ;
+                  Name=Printer;
+                  NotBlank=Yes;
+                  SourceExpr=Printer.ID;
+                  MinValue=1;
+                  MaxValue=90000;
+                  TableRelation="Label Printers".ID WHERE (In Use=CONST(Yes)) }
+
+    }
+  }
+  LABELS
+  {
+  }
+  CODE
+  {
+    VAR
+      NumberOfCopies@1000000000 : Integer;
+      DataTextOption@1000000002 : 'Item No.,Item Description,Inventory,Unit Cost,Unit Price';
+      DataTextOption2@1000000003 : 'Item No.,Item Description,Inventory,Unit Cost,Unit Price,None';
+      DataTextOption3@1000000004 : 'Item No.,Item Description,Inventory,Unit Cost,Unit Price,None';
+      DataTypeOption@1000000005 : 'smalltext,mediumtext,bigtext,128-Barcode,QR-Code';
+      DataTypeOption2@1000000006 : 'smalltext,mediumtext,bigtext,128-Barcode,QR-Code';
+      DataTypeOption3@1000000007 : 'smalltext,mediumtext,bigtext,128-Barcode,QR-Code';
+      Prefix@1000000009 : Boolean;
+      Printer@1000000001 : Record 50000;
+
+    PROCEDURE CallCodeUnit@1000000001(Option@1000000009 : Integer);
+    VAR
+      LabelprinterFunctions@1000000008 : Codeunit 95478;
+      agreed@1000000007 : Boolean;
+      TextTypeList@1000000006 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1";
+      TextDataList@1000000005 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1";
+      Rows@1000000004 : Integer;
+      i@1000000003 : Integer;
+      PrefixText@1000000002 : Text[1024];
+      TextOptionList@1000000001 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1";
+      Position@1000000000 : Integer;
+    BEGIN
+      agreed:=TRUE;
+
+      //If's to check for bad input
+      IF (Item.COUNT() > 1) THEN BEGIN
+          agreed := DIALOG.CONFIRM('You are about to print ' + FORMAT(Item.COUNT) + ' items.\' + 'Are you sure you want to continue?',TRUE);
+          //MESSAGE('Dont print dat much bruh');
+          //agreed:= FALSE;
+        END;
+      IF Item.COUNT = 0 THEN BEGIN
+          MESSAGE('Something needs to be inside the filter in order to print.');
+          agreed:= FALSE;
+        END;
+      IF NumberOfCopies < 1 THEN BEGIN
+        MESSAGE('Need at least one copy for the printer to print.');
+        agreed:= FALSE;
+      END;
+      //If dialog is successful, continue
+      IF agreed THEN BEGIN
+        Printer.SETRANGE(ID, Printer.ID, Printer.ID);
+        Printer.FINDSET;
+        IF Item.FINDSET THEN REPEAT
+          TextTypeList := TextTypeList.List;
+          TextDataList := TextDataList.List;
+
+          TextOptionList:=TextOptionList.List;
+          TextOptionList.Add(FORMAT(DataTextOption));
+          TextOptionList.Add(FORMAT(DataTextOption2));
+          TextOptionList.Add(FORMAT(DataTextOption3));
+
+          //Adds text to text list with or without the caption prefix
+          FOR i:= 0 TO TextOptionList.Count-1 DO BEGIN
+            Rows:=3;
+            IF NOT Prefix THEN BEGIN
+              CASE FORMAT(TextOptionList.Item(i)) OF
+                'None': TextDataList.Add('nonevoid');
+                'Item No.': TextDataList.Add(Item."No.");
+                'Item Description': TextDataList.Add(Item.Description);
+                'Inventory' : TextDataList.Add(Item.Inventory);
+                'Unit Cost':  TextDataList.Add(Item."Unit Cost");
+                'Unit Price':  TextDataList.Add(Item."Unit Price");
+              END;
+            END ELSE BEGIN
+              CASE FORMAT(TextOptionList.Item(i)) OF
+                'None': TextDataList.Add('nonevoid');
+                'Item No.': TextDataList.Add('Item No: '+FORMAT(Item."No."));
+                'Item Description': TextDataList.Add('Item Description: '+Item.Description);
+                'Inventory' : TextDataList.Add('Inventory: '+FORMAT(Item.Inventory));
+                'Unit Cost':  TextDataList.Add('Unit Cost: '+ FORMAT(Item."Unit Cost"));
+                'Unit Price':  TextDataList.Add('Unit Price: '+FORMAT(Item."Unit Price"));
+              END;
+            END;
+            END;
+
+          TextOptionList:=TextOptionList.List;
+          TextOptionList.Add(FORMAT(DataTypeOption));
+          TextOptionList.Add(FORMAT(DataTypeOption2));
+          TextOptionList.Add(FORMAT(DataTypeOption3));
+
+        //Adds the text types of the text elements to the text type list
+          FOR i:= 0 TO TextOptionList.Count-1 DO BEGIN
+            CASE FORMAT(TextOptionList.Item(i)) OF
+              'smalltext': TextTypeList.Add(1);
+              'mediumtext' : TextTypeList.Add(2);
+              'bigtext':  TextTypeList.Add(3);
+              '128-Barcode':  TextTypeList.Add(4);
+              'QR-Code':  TextTypeList.Add(5);
+              END;
+            END;
+
+
+        //Removes the prefix for special text types such as barcode and such
+       IF Prefix THEN BEGIN
+            FOR i:= 0 TO TextOptionList.Count-1 DO BEGIN
+            IF FORMAT(TextDataList.Item(i)) <> 'nonevoid' THEN BEGIN
+              IF (FORMAT(TextTypeList.Item(i)) = '4') OR (FORMAT(TextTypeList.Item(i)) = '5') THEN BEGIN
+               Position := STRPOS(FORMAT(TextDataList.Item(i)),':') + 2;
+               TextDataList.Insert(i,FORMAT(COPYSTR(FORMAT(TextDataList.Item(i)),Position,STRLEN(FORMAT(TextDataList.Item(i))))));
+               TextDataList.RemoveAt(i+1);
+              END
+            END
+            END
+            END;
+        LabelprinterFunctions.LabelStart(TextTypeList, TextDataList, NumberOfCopies,Printer,Option);
+
+
+        UNTIL Item.NEXT = 0;
+
+        END
+        ELSE BEGIN
+        MESSAGE('Print aborted');
+      END
+    END;
+
+    BEGIN
+    END.
+  }
+  RDLDATA
+  {
+  }
+}
+
+OBJECT Codeunit 50000 Label Printer FTP
+{
+  OBJECT-PROPERTIES
+  {
+    Date=22-08-17;
+    Time=14:28:20;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    OnRun=VAR
+            Request@1000000000 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.FtpWebRequest";
+            Methods@1000000001 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.WebRequestMethods";
+          BEGIN
+            //SendFileToPrinter('192.168.1.202', 'C:\Users\sgm\OneDrive - Consortio IT ApS\LabelPrinter\testprintersettingslabel.txt');
+          END;
+
+  }
+  CODE
+  {
+
+    PROCEDURE SendFileToPrinter@1000000003(pLabelPrinterNameOrIp@1000000006 : Text;pFileToPrint@1000000007 : Text);
+    VAR
+      WebRequest@1000000000 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.WebRequest" RUNONCLIENT;
+      WebRequestMethods@1000000008 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.WebRequestMethods" RUNONCLIENT;
+      FtpRequest@1000000001 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.FtpWebRequest" RUNONCLIENT;
+      Credentials@1000000002 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.NetworkCredential" RUNONCLIENT;
+      FileStream@1000000003 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileStream" RUNONCLIENT;
+      PrintFile@1000000004 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.File" RUNONCLIENT;
+      FtpUrl@1000000005 : Text;
+    BEGIN
+      FtpUrl := 'ftp://' + pLabelPrinterNameOrIp + '/' + pFileToPrint;
+      FtpRequest := WebRequest.Create(FtpUrl);
+      FtpRequest.Method := 'STOR';
+      FileStream := PrintFile.OpenRead(pFileToPrint);
+      FtpRequest.GetRequestStream.Write(PrintFile.ReadAllBytes(pFileToPrint), 0, FileStream.Length);
+    END;
+
+    BEGIN
+    END.
+  }
+}
+
+OBJECT Codeunit 50001 Printer Code Interface
+{
+  OBJECT-PROPERTIES
+  {
+    Date=22-08-17;
+    Time=14:59:36;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    OnRun=BEGIN
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      TheOutStream@1000000000 : OutStream;
+      PrinterFile@1000000001 : File;
+      Language@1000000002 : Text;
+      PrinterVar@1000000003 : Record 50000;
+      FilePath@1000000004 : Text[1024];
+
+    PROCEDURE PlaceText@1000000000(x@1000000000 : Integer;y@1000000001 : Integer;TextOnLabel@1000000002 : Text[1024];Width@1000000003 : Decimal;Height@1000000004 : Decimal;Font@1000000005 : Text[1]);
+    BEGIN
+      IF UPPERCASE(Language)='ZPL' THEN BEGIN
+        TheOutStream.WRITETEXT('^CF' + Font + ',' + FORMAT(Width) + ',' + FORMAT(Height) + '^FO' + FORMAT(x) + ',' + FORMAT(y) + '^FD' + TextOnLabel + '^FS');
+        END
+    END;
+
+    PROCEDURE CreateFile@1000000004(Printer@1000000000 : Record 50000);
+    VAR
+      PrinterLanguage@1000000002 : Record 50001;
+    BEGIN
+      PrinterVar := Printer;
+      PrinterLanguage.SETCURRENTKEY(ID);
+      PrinterLanguage.SETRANGE(ID, PrinterVar.ID, PrinterVar.ID);
+      PrinterLanguage.SETFILTER(ID, FORMAT(PrinterVar.ID));
+      IF PrinterLanguage.FINDSET THEN
+        Language:=FORMAT(PrinterLanguage.Language);
+
+      IF UPPERCASE(Language)='ZPL' THEN BEGIN
+        FilePath := 'C:\Software\temp.zpl';
+        PrinterFile.CREATE(FilePath, TEXTENCODING::MSDos);
+        PrinterFile.CREATEOUTSTREAM(TheOutStream);
+        TheOutStream.WRITETEXT('^XA');
+        END
+    END;
+
+    PROCEDURE CloseFile@1000000001();
+    BEGIN
+      IF UPPERCASE(Language)='ZPL' THEN BEGIN
+        TheOutStream.WRITETEXT('^XZ');
+        PrinterFile.CLOSE();
+        END
+    END;
+
+    PROCEDURE "Print File"@1000000006();
+    VAR
+      FTPToPrinter@1000000000 : Codeunit 50000;
+    BEGIN
+      //FTPToPrinter.SendFileToPrinter(PrinterVar.IP,FilePath);
+    END;
+
+    BEGIN
+    END.
+  }
+}
+
+OBJECT Codeunit 50005 FTPToPrinter
+{
+  OBJECT-PROPERTIES
+  {
+    Date=23-08-17;
+    Time=12:34:32;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    OnRun=VAR
+            Request@1000000000 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.FtpWebRequest";
+            Methods@1000000001 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.WebRequestMethods";
+          BEGIN
+            SendFileToPrinter('192.168.1.202', 'C:\Software\topkekdetvirker.zpl');
+          END;
+
+  }
+  CODE
+  {
+
+    PROCEDURE SendFileToPrinter@1000000003(pLabelPrinterNameOrIp@1000000006 : Text;pFileToPrint@1000000007 : Text);
+    VAR
+      WebRequest@1000000000 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.WebRequest" RUNONCLIENT;
+      WebRequestMethods@1000000008 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.WebRequestMethods" RUNONCLIENT;
+      FtpRequest@1000000001 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.FtpWebRequest" RUNONCLIENT;
+      Credentials@1000000002 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.NetworkCredential" RUNONCLIENT;
+      FileStream@1000000003 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.FileStream" RUNONCLIENT;
+      PrintFile@1000000004 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.File" RUNONCLIENT;
+      FtpUrl@1000000005 : Text;
+    BEGIN
+      FtpUrl := 'ftp://' + pLabelPrinterNameOrIp + '/' + pFileToPrint;
+      FtpRequest := WebRequest.Create(FtpUrl);
+      FtpRequest.Method := 'STOR';
+      FileStream := PrintFile.OpenRead(pFileToPrint);
+      FtpRequest.GetRequestStream.Write(PrintFile.ReadAllBytes(pFileToPrint), 0, FileStream.Length);
+    END;
+
+    BEGIN
+    END.
+  }
+}
+
+OBJECT Codeunit 50007 FormatFiddeling
+{
+  OBJECT-PROPERTIES
+  {
+    Date=25-08-17;
+    Time=13:14:30;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    OnRun=BEGIN
+          END;
+
+  }
+  CODE
+  {
+
+    LOCAL PROCEDURE PrintToFile@1000000000(Rows@1000000000 : Integer;Columns@1000000001 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1";Texts@1000000002 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1";Texttypes@1000000003 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1";i@1000000004 : Integer;Fieldcount@1000000005 : Integer);
+    BEGIN
+      Fieldcount := 0;
+      FOR i:=0 TO Columns.Count-1 DO BEGIN
+        //Fieldcount := Fieldcount + Columns.Item(i);
+        END;
+    END;
+
+    BEGIN
+    END.
+  }
+}
+
+OBJECT Codeunit 50009 PrintItem
+{
+  OBJECT-PROPERTIES
+  {
+    Date=23-08-17;
+    Time=14:45:06;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    OnRun=BEGIN
+          END;
+
+  }
+  CODE
+  {
+
+    LOCAL PROCEDURE ItemPrint@1000000000(Input@1000000000 : Text[1024]);
+    BEGIN
+    END;
+
+    BEGIN
+    END.
+  }
+}
+
+OBJECT Codeunit 50010 TestUnit
+{
+  OBJECT-PROPERTIES
+  {
+    Date=29-08-17;
+    Time=09:48:09;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    OnRun=VAR
+            WinShell@1000000000 : Automation "{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B} 1.0:{72C24DD5-D70A-438B-8A42-98424B88AFB8}:'Windows Script Host Object Model'.WshShell";
+          BEGIN
+            IF ISCLEAR(WinShell) THEN
+             CREATE(WinShell,TRUE,TRUE);
+            WinShell.SendKeys('%(R)');
+          END;
+
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+
+OBJECT Codeunit 95478 Label Format With Lists
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01-09-17;
+    Time=13:06:09;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    OnRun=VAR
+            TextType@1000000000 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1";
+            TextData@1000000001 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1";
+            TextPlacement@1000000002 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1";
+            Rows@1000000003 : Integer;
+          BEGIN
+            //TextTypes:
+            //1: Small text
+            //2: Medium text
+            //3: Large text
+            //4: 128-Code Bar Code
+            //5: QR-code
+            //6: EAN-13 Bar Code
+            //7: UPC-A Bar Code
+            //8: EAN-8 Bar Code
+            //9: UPC-E Bar Code
+          END;
+
+  }
+  CODE
+  {
+    VAR
+      DotHeight@1000000001 : Integer;
+      DotWidth@1000000000 : Integer;
+      BarCodePos@1000000003 : Text[1024];
+      Indent@1000000002 : Decimal;
+      smalltext@1000000005 : Text[1024];
+      mediumtext@1000000006 : Text[1024];
+      largetext@1000000007 : Text[1024];
+      marginX@1000000004 : Integer;
+      marginY@1000000008 : Integer;
+      url@1000000009 : BigText;
+      PrinterGlobal@1000000010 : Record 50000;
+      stortekst@1000000011 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.String";
+      ZplCode@1000000012 : Text[1024];
+      OptionGlobal@1000000013 : Integer;
+      ZPLFilePath@1000000014 : Text;
+      RowAdjustment_Globalis@1000000015 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1";
+      RowIndent@1000000016 : ARRAY [6] OF Integer;
+
+    PROCEDURE LabelStart@1000000001(TextType@1000000000 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1";TextData@1000000001 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1";Copies@1000000002 : Integer;Printer@1000000010 : Record 50000;Option@1000000009 : Integer;RowAdjustment@1000000014 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1") textreturn : Text[1024];
+    VAR
+      TextType1@1000000006 : Integer;
+      TextType2@1000000005 : Integer;
+      TextType3@1000000004 : Integer;
+      LabelHeight@1000000013 : Decimal;
+      LabelWidth@1000000012 : Decimal;
+      DPmm@1000000011 : Decimal;
+      i@1000000007 : Integer;
+      Rows@1000000003 : Integer;
+      k@1000000008 : Integer;
+      TempInt@1000000015 : Integer;
+    BEGIN
+      MESSAGE('LabelStart');
+      Rows := 3;
+      i:=0;
+      k:=0;
+        //Removes all field set to "none" from both lists
+       WHILE k < 3 DO BEGIN
+         IF FORMAT(TextData.Item(i)) = 'nonevoid' THEN BEGIN
+           Rows := Rows-1;
+           TextData.RemoveAt(i);
+           TextType.RemoveAt(i);
+           END ELSE BEGIN
+             i:=i+1;
+             END;
+            k:= k+1;
+        END;
+
+      RowAdjustment_Globalis := RowAdjustment_Globalis.List;
+      RowAdjustment_Globalis := RowAdjustment;
+      MESSAGE(FORMAT(RowAdjustment_Globalis.Item(0)));
+
+      FOR i:= 0 TO RowAdjustment_Globalis.Count-1 DO BEGIN
+
+       IF EVALUATE(TempInt, FORMAT(RowAdjustment_Globalis.Item(i))) THEN BEGIN
+        IF i<6 THEN BEGIN
+          RowIndent[i+1] := TempInt;
+
+          END;
+        IF i=6 THEN BEGIN
+          RowIndent[1] := RowIndent[1] + TempInt;
+          RowIndent[3] := RowIndent[3] + TempInt;
+          RowIndent[5] := RowIndent[5] + TempInt;
+          //MESSAGE(FORMAT(RowIndent[1]) + ' ' + FORMAT(RowAdjustment_Globalis.Item(i)));
+          END;
+        IF i=7 THEN BEGIN
+          RowIndent[2] := RowIndent[2] + TempInt;
+          RowIndent[4] := RowIndent[4] + TempInt;
+          RowIndent[6] := RowIndent[6] + TempInt;
+          //MESSAGE(FORMAT(RowIndent[2]) + ' ' + FORMAT(RowAdjustment_Globalis.Item(i)));
+          END;
+        END;
+        END;
+
+      PrinterGlobal := Printer;
+      OptionGlobal := Option;
+
+      DPmm := Printer.DPI;
+      LabelWidth := Printer.LabelWidth;
+      LabelHeight := Printer.LabelHeight;
+
+      DotHeight := LabelHeight*DPmm*10;
+      DotWidth := LabelWidth*DPmm*10;
+
+      smalltext := '^AA,' + FORMAT(ROUND(((27/400)*DotHeight),1,'='))+ ','+FORMAT(ROUND((15/800)*DotWidth,1,'='));
+      mediumtext := '^AA,' + FORMAT(ROUND(((45/400)*DotHeight),1,'='))+ ','+FORMAT(ROUND((25/800)*DotWidth,1,'='));
+      largetext := '^AA,' + FORMAT(ROUND(((72/400)*DotHeight),1,'='))+ ','+FORMAT(ROUND((40/800)*DotWidth,1,'='));
+
+      marginX := 10;
+      marginY := 10;
+
+       IF (((TextType.Count <> TextData.Count)) OR (Rows>3)) THEN BEGIN
+        ERROR('Wrong number of strings');
+        END
+        ELSE BEGIN
+          CASE Rows OF
+            1: IF EVALUATE(TextType1,FORMAT(TextType.Item(0))) THEN BEGIN
+            //MESSAGE('1 Row');
+              textreturn := OneRowLayout(DPmm,TextType1,FORMAT(TextData.Item(0)), Copies);
+            END;
+            2: BEGIN
+              //MESSAGE('2 Rows');
+              textreturn := TwoRowLayout(DPmm,TextType,TextData, Copies);
+              END;
+            3: BEGIN
+              //MESSAGE('3 Rows');
+             textreturn := ThreeRowLayout(DPmm,TextType,TextData, Copies);
+             END;
+            ELSE BEGIN
+            ERROR('Too many rows');
+              END;
+       END;
+       END
+    END;
+
+    LOCAL PROCEDURE OneRowLayout@1000000017(DPmm@1000000002 : Decimal;TextType@1000000003 : Integer;TextData@1000000004 : Text[1024];Copies@1000000008 : Integer) returnvar : Text[1024];
+    BEGIN
+      MESSAGE('Onerow');
+      //1: Starting width in dots 2: Starting height in dots 3: FB/BC/BQ 4: Textsize+Text/Text
+      ZplCode := '^XA'+'^FO'+'%1,'+'%2'+'%3'+'^FD'+'%4'+'^FS'+'^XZ';
+      CASE TextType OF
+        1: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^FB' + FORMAT(DotWidth-marginX*2) + ',10,0,C,0' + smalltext,TextData);
+        2: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^FB' + FORMAT(DotWidth-marginX*2) + ',10,0,C,0' + mediumtext,TextData);
+        3: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^FB' + FORMAT(DotWidth-marginX*2) + ',10,0,C,0' + largetext,TextData);
+        4: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^BCN,'+FORMAT(DotHeight/2-40)+',Y,N,N,N',TextData);
+        5: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^BQa,2,6,q,7,'+FORMAT(DotHeight/2-40)+',Y,N,N,N',TextData);
+        6: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^BY3^BEN,'+FORMAT(DotHeight/2-40)+',Y,N,',TextData);
+        7: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^BY3^BUN,'+FORMAT(DotHeight/2-40)+',Y,N,Y,',TextData);
+        8: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^BY3^B8N,'+FORMAT(DotHeight/2-40)+',Y,N,',TextData);
+        9: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^BY3^B9N,'+FORMAT(DotHeight/2-40)+',Y,N,Y,',TextData);
+        END;
+      CASE OptionGlobal OF
+        1: SendToPrinter('c:\label\test.zpl');
+        2: returnvar := Preview();
+        END;
+    END;
+
+    LOCAL PROCEDURE TwoRowLayout@1000000018(DPmm@1000000002 : Decimal;TextType@1000000001 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1";TextData@1000000000 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1";Copies@1000000011 : Integer) returnvar : Text[1024];
+    VAR
+      TextType1@1000000008 : Integer;
+      TextType2@1000000009 : Integer;
+      TextType3@1000000010 : Integer;
+    BEGIN
+      MESSAGE('tworow');
+      IF EVALUATE (TextType1,FORMAT(TextType.Item(0))) AND EVALUATE (TextType2,FORMAT(TextType.Item(1))) THEN BEGIN
+        ZplCode := '^XA'+'^FO'+'%1,'+'%2'+'%3'+'^FD'+'%4'+'^FS'+'^FO'+'%5,'+'%6'+'%7'+'^FD'+'%8'+'^FS'+'^XZ';
+
+        CASE TextType1 OF
+          1: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^FB' + FORMAT(DotWidth-marginX*2 - RowIndent[1]) + ',10,0,C,0' + mediumtext,FORMAT(TextData.Item(0)),'%1','%2','%3','%4');
+          2: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^FB' + FORMAT(DotWidth-marginX*2 - RowIndent[1]) + ',10,0,C,0' + mediumtext,FORMAT(TextData.Item(0)),'%1','%2','%3','%4');
+          3: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^FB' + FORMAT(DotWidth-marginX*2 - RowIndent[1]) + ',10,0,C,0' + largetext,FORMAT(TextData.Item(0)),'%1','%2','%3','%4');
+          4: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^BCN,'+FORMAT(DotHeight/2-40)+',Y,N,N,N',FORMAT(TextData.Item(0)),'%1','%2','%3','%4');
+          5: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^BQa,2,6,q,7,'+FORMAT(DotHeight/2-40)+',Y,N,N,N',FORMAT(TextData.Item(0)),'%1','%2','%3','%4');
+          6: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^BY3^BEN,'+FORMAT(DotHeight/2-40)+',Y,N,',FORMAT(TextData.Item(0)),'%1','%2','%3','%4');
+          7: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^BY3^BUN,'+FORMAT(DotHeight/2-40)+',Y,N,Y,',FORMAT(TextData.Item(0)),'%1','%2','%3','%4');
+          8: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^BY3^B8N,'+FORMAT(DotHeight/2-40)+',Y,N,',FORMAT(TextData.Item(0)),'%1','%2','%3','%4');
+          9: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^BY3^B9N,'+FORMAT(DotHeight/2-40)+',Y,N,Y,',FORMAT(TextData.Item(0)),'%1','%2','%3','%4');
+            END;
+
+        CASE TextType2 OF
+          1: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[3]),FORMAT(ROUND(DotHeight/2+10,1,'=') + RowIndent[4],0,2),'^FB' + FORMAT(DotWidth-marginX*2 - RowIndent[3]) + ',10,0,C,0' + smalltext,FORMAT(TextData.Item(1)));
+          2: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[3]),FORMAT(ROUND(DotHeight/2+10,1,'=') + RowIndent[4],0,2),'^FB' + FORMAT(DotWidth-marginX*2 - RowIndent[3]) + ',10,0,C,0' + mediumtext,FORMAT(TextData.Item(1)));
+          3: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[3]),FORMAT(ROUND(DotHeight/2+10,1,'=') + RowIndent[4],0,2),'^FB' + FORMAT(DotWidth-marginX*2 - RowIndent[3]) + ',10,0,C,0' + largetext,FORMAT(TextData.Item(1)));
+          4: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[3]),FORMAT(ROUND(DotHeight/2+10,1,'=') + RowIndent[4],0,2),'^BCN,'+FORMAT(DotHeight/2-40)+',Y,N,N,N',FORMAT(TextData.Item(1)));
+          5: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[3]),FORMAT(ROUND(DotHeight/2+10,1,'=') + RowIndent[4],0,2),'^BQa,2,6,q,7,'+FORMAT(DotHeight/2-40)+',Y,N,N,N',FORMAT(TextData.Item(1)));
+          6: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[3]),FORMAT(ROUND(DotHeight/2+10,1,'=') + RowIndent[4],0,2),'^BY3^BEN,'+FORMAT(DotHeight/2-40)+',Y,N,',FORMAT(TextData.Item(1)));
+          7: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[3]),FORMAT(ROUND(DotHeight/2+10,1,'=') + RowIndent[4],0,2),'^BY3^BUN,'+FORMAT(DotHeight/2-40)+',Y,N,Y,',FORMAT(TextData.Item(1)));
+          8: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[3]),FORMAT(ROUND(DotHeight/2+10,1,'=') + RowIndent[4],0,2),'^BY3^B8N,'+FORMAT(DotHeight/2-40)+',Y,N,',FORMAT(TextData.Item(1)));
+          9: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[3]),FORMAT(ROUND(DotHeight/2+10,1,'=') + RowIndent[4],0,2),'^BY3^B9N,'+FORMAT(DotHeight/2-40)+',Y,N,Y,',FORMAT(TextData.Item(1)));
+            END;
+        END;
+
+      CASE OptionGlobal OF
+        1: SendToPrinter('c:\label\test.zpl');
+        2: returnvar := Preview();
+        END;
+    END;
+
+    LOCAL PROCEDURE ThreeRowLayout@1000000019(DPmm@1000000002 : Decimal;TextType@1000000001 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1";TextData@1000000000 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1";Copies@1000000012 : Integer) returnvar : Text[1024];
+    VAR
+      TextType1@1000000007 : Integer;
+      TextType2@1000000006 : Integer;
+      TextType3@1000000005 : Integer;
+      BarcodeSize@1000000011 : Integer;
+    BEGIN
+      MESSAGE('threerow');
+      BarcodeSize := DotHeight/4;
+
+      IF EVALUATE (TextType1,FORMAT(TextType.Item(0))) AND EVALUATE (TextType2,FORMAT(TextType.Item(1))) AND EVALUATE (TextType3,FORMAT(TextType.Item(2))) THEN BEGIN
+        ZplCode := '^XA'+'^FO'+'%1,'+'%2'+'%3'+'^FD'+'%4'+'^FS'+'^FO'+'%5,'+'%6'+'%7'+'^FD'+'%8'+'^FS'+'^FO'+'%9,'+'%10'+'%11'+'^FD'+'%12'+'^FS'+'^XZ';
+        CASE TextType1 OF
+          1: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^FB' + FORMAT(DotWidth-marginX*2 - RowIndent[1]) + ',10,0,C,0' + smalltext,FORMAT(TextData.Item(0)),'%1','%2','%3','%4','%5','%6','%7','%8');
+          2: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^FB' + FORMAT(DotWidth-marginX*2 - RowIndent[1]) + ',10,0,C,0' + mediumtext,FORMAT(TextData.Item(0)),'%1','%2','%3','%4','%5','%6','%7','%8');
+          3: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^FB' + FORMAT(DotWidth-marginX*2 - RowIndent[1]) + ',10,0,C,0' + largetext,FORMAT(TextData.Item(0)),'%1','%2','%3','%4','%5','%6','%7','%8');
+          4: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^BCN,'+FORMAT(ROUND(BarcodeSize,1,'='),0,2)+',Y,N,N,N',FORMAT(TextData.Item(0)),'%1','%2','%3','%4','%5','%6','%7','%8');
+          5: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^BQa,2,6,q,7,'+FORMAT(ROUND(BarcodeSize,1,'='),0,2)+',Y,N,N,N',FORMAT(TextData.Item(0)),'%1','%2','%3','%4','%5','%6','%7','%8');
+          6: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^BY3^BEN,'+FORMAT(ROUND(BarcodeSize,1,'='),0,2)+',Y,N,',FORMAT(TextData.Item(0)),'%1','%2','%3','%4','%5','%6','%7','%8');
+          7: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^BY3^BUN,'+FORMAT(ROUND(BarcodeSize,1,'='),0,2)+',Y,N,Y,',FORMAT(TextData.Item(0)),'%1','%2','%3','%4','%5','%6','%7','%8');
+          8: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^BY3^B8N,'+FORMAT(ROUND(BarcodeSize,1,'='),0,2)+',Y,N,',FORMAT(TextData.Item(0)),'%1','%2','%3','%4','%5','%6','%7','%8');
+          9: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[1]),FORMAT(marginY + RowIndent[2]),'^BY3^B9N,'+FORMAT(ROUND(BarcodeSize,1,'='),0,2)+',Y,N,Y',FORMAT(TextData.Item(0)),'%1','%2','%3','%4','%5','%6','%7','%8');
+            END;
+
+        CASE TextType2 OF
+          1: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[3]),FORMAT(ROUND(DotHeight/3+10,1,'=') + RowIndent[4],0,2),'^FB' + FORMAT(DotWidth-marginX*2 - RowIndent[3]) + ',10,0,C,0' + smalltext,FORMAT(TextData.Item(1)),'%1','%2','%3','%4');
+          2: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[3]),FORMAT(ROUND(DotHeight/3+10,1,'=') + RowIndent[4],0,2),'^FB' + FORMAT(DotWidth-marginX*2 - RowIndent[3]) + ',10,0,C,0' + mediumtext,FORMAT(TextData.Item(1)),'%1','%2','%3','%4');
+          3: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[3]),FORMAT(ROUND(DotHeight/3+10,1,'=') + RowIndent[4],0,2),'^FB' + FORMAT(DotWidth-marginX*2 - RowIndent[3]) + ',10,0,C,0' + largetext,FORMAT(TextData.Item(1)),'%1','%2','%3','%4');
+          4: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[3]),FORMAT(ROUND(DotHeight/3+10,1,'=') + RowIndent[4],0,2),'^BCN,'+FORMAT(ROUND(BarcodeSize,1,'='),0,2)+',Y,N,N,N',FORMAT(TextData.Item(1)),'%1','%2','%3','%4');
+          5: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[3]),FORMAT(ROUND(DotHeight/3+10,1,'=') + RowIndent[4],0,2),'^BQa,2,6,q,7,'+FORMAT(ROUND(BarcodeSize,1,'='),0,2)+',Y,N,N,N',FORMAT(TextData.Item(1)),'%1','%2','%3','%4');
+          6: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[3]),FORMAT(ROUND(DotHeight/3+10,1,'=') + RowIndent[4],0,2),'^BY3^BEN,'+FORMAT(ROUND(BarcodeSize,1,'='),0,2)+',Y,N,',FORMAT(TextData.Item(1)),'%1','%2','%3','%4');
+          7: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[3]),FORMAT(ROUND(DotHeight/3+10,1,'=') + RowIndent[4],0,2),'^BY3^BUN,'+FORMAT(ROUND(BarcodeSize,1,'='),0,2)+',Y,N,Y,',FORMAT(TextData.Item(1)),'%1','%2','%3','%4');
+          8: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[3]),FORMAT(ROUND(DotHeight/3+10,1,'=') + RowIndent[4],0,2),'^BY3^B8N,'+FORMAT(ROUND(BarcodeSize,1,'='),0,2)+',Y,N,',FORMAT(TextData.Item(1)),'%1','%2','%3','%4');
+          9: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[3]),FORMAT(ROUND(DotHeight/3+10,1,'=') + RowIndent[4],0,2),'^BY3^B9N,'+FORMAT(ROUND(BarcodeSize,1,'='),0,2)+',Y,N,Y,',FORMAT(TextData.Item(1)),'%1','%2','%3','%4');
+            END;
+
+        CASE TextType3 OF
+          1: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[5]),FORMAT(ROUND(DotHeight/3*2+10,1,'=') + RowIndent[6],0,2),'^FB' + FORMAT(DotWidth-marginX*2 - RowIndent[5]) + ',10,0,C,0' + smalltext,FORMAT(TextData.Item(2)));
+          2: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[5]),FORMAT(ROUND(DotHeight/3*2+10,1,'=') + RowIndent[6],0,2),'^FB' + FORMAT(DotWidth-marginX*2 - RowIndent[5]) + ',10,0,C,0' + mediumtext,FORMAT(TextData.Item(2)));
+          3: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[5]),FORMAT(ROUND(DotHeight/3*2+10,1,'=') + RowIndent[6],0,2),'^FB' + FORMAT(DotWidth-marginX*2 - RowIndent[5]) + ',10,0,C,0' + largetext,FORMAT(TextData.Item(2)));
+          4: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[5]),FORMAT(ROUND(DotHeight/3*2+10,1,'=') + RowIndent[6],0,2),'^BCN,'+FORMAT(ROUND(BarcodeSize,1,'='),0,2)+',Y,N,N,N',FORMAT(TextData.Item(2)));
+          5: ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[5]),FORMAT(ROUND(DotHeight/3*2+10,1,'=') + RowIndent[6],0,2),'^BQa,2,6,q,7,'+FORMAT(ROUND(BarcodeSize,1,'='),0,2)+',Y,N,N,N',FORMAT(TextData.Item(2)));
+          6:ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[5]),FORMAT(ROUND(DotHeight/3*2+10,1,'=') + RowIndent[6],0,2),'^^BY3^BEN,'+FORMAT(ROUND(BarcodeSize,1,'='),0,2)+',Y,N,',FORMAT(TextData.Item(2)));
+          7:ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[5]),FORMAT(ROUND(DotHeight/3*2+10,1,'=') + RowIndent[6],0,2),'^BY3^BUN,'+FORMAT(ROUND(BarcodeSize,1,'='),0,2)+',Y,N,Y,',FORMAT(TextData.Item(2)));
+          8:ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[5]),FORMAT(ROUND(DotHeight/3*2+10,1,'=') + RowIndent[6],0,2),'^BY3^B8N,'+FORMAT(ROUND(BarcodeSize,1,'='),0,2)+',Y,N,',FORMAT(TextData.Item(2)));
+          9:ZplCode := STRSUBSTNO(ZplCode,FORMAT(marginX + RowIndent[5]),FORMAT(ROUND(DotHeight/3*2+10,1,'=') + RowIndent[6],0,2),'^BY3^B9N,'+FORMAT(ROUND(BarcodeSize,1,'='),0,2)+',Y,N,Y,',FORMAT(TextData.Item(2)));
+            END;
+        END;
+
+      CASE OptionGlobal OF
+        1: SendToPrinter('c:\label\test.zpl');
+        2: returnvar := Preview();
+        END;
+    END;
+
+    PROCEDURE PrintToFile@1000000023();
+    VAR
+      MyFile@1000000000 : File;
+      MyOutStream@1000000001 : OutStream;
+      ReadFile@1000000004 : File;
+      InStream@1000000005 : InStream;
+      Texts@1000000006 : Text[1024];
+      tempZPL@1000000007 : Text[1024];
+      i@1000000008 : Integer;
+      k@1000000009 : Integer;
+      charmander@1000000010 : Text[1023];
+      XMLHTTP@1000000011 : Automation "{F5078F18-C551-11D3-89B9-0000F81FE221} 3.0:{F6D90F16-9C73-11D3-B32E-00C04F990BB4}:'Microsoft XML, v3.0'.XMLHTTP";
+    BEGIN
+      MESSAGE('Printtofile');
+      MESSAGE('ZPLcode: ' + ZplCode);
+      ZPLFilePath := 'c:\label\test.zpl';
+      MyFile.TEXTMODE(TRUE);
+      MyFile.CREATE(ZPLFilePath, TEXTENCODING::UTF8);
+      MyFile.CREATEOUTSTREAM(MyOutStream);
+      MyOutStream.WRITE(ZplCode);
+      MyFile.CLOSE();
+    END;
+
+    PROCEDURE SendToPrinter@1000000000(TextPath@1000000000 : Text);
+    VAR
+      FTPPRinter@1000000002 : Codeunit 50000;
+    BEGIN
+      PrintToFile();
+      //FTPPRinter.SendFileToPrinter(PrinterGlobal.IP,TextPath);
+      MESSAGE('Send to printer');
+    END;
+
+    PROCEDURE Preview@1000000003() returnpath : Text[1024];
+    VAR
+      MyFile@1000000000 : File;
+      MyInStream@1000000001 : InStream;
+      WebClient@1000000003 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.WebClient";
+      filename@1000000002 : Text[1024];
+      readzplcode@1000000004 : Text[1024];
+      MyOutStream@1000000005 : OutStream;
+    BEGIN
+      MESSAGE('Creating preview picture');
+      PrintToFile();
+      filename := 'C:\label\etwas.png';
+
+      IF EXISTS(filename) THEN BEGIN
+      ERASE(filename);
+        END;
+
+      WebClient := WebClient.WebClient;
+
+      MyFile.TEXTMODE(TRUE);
+      MyFile.OPEN(ZPLFilePath, TEXTENCODING::UTF8);
+      MyFile.CREATEINSTREAM(MyInStream);
+      MyInStream.READTEXT(readzplcode);
+      MyFile.CLOSE();
+
+      stortekst := 'http://api.labelary.com/v1/printers/'+FORMAT(PrinterGlobal.DPI)+'dpmm/labels/' +
+      CONVERTSTR(FORMAT(ROUND(PrinterGlobal.LabelWidth/2.54,0.01,'=')), ',','.') + 'x' + CONVERTSTR(FORMAT(ROUND(PrinterGlobal.LabelHeight/2.54,0.01,'=')), ',','.') + '/0/'+ '^XA^FO,0,0^GB'+FORMAT(DotWidth-1)+','+FORMAT(DotHeight-1)+',1,B^FS'+
+      COPYSTR(readzplcode,4,STRLEN(readzplcode));
+
+      MyFile.TEXTMODE(TRUE);
+      MyFile.CREATE('C:\label\link.txt', TEXTENCODING::UTF8);
+      MyFile.CREATEOUTSTREAM(MyOutStream);
+      MyOutStream.WRITE(stortekst.ToString);
+      MyFile.CLOSE();
+
+      WebClient.DownloadFile(stortekst.ToString, filename);
+
+      returnpath := filename;
+    END;
+
+    PROCEDURE ImportPicture@1000000011();
+    VAR
+      WebClient@1000000010 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.WebClient";
+      WebRequest@1000000011 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.WebRequest";
+      Uri@1000000012 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Uri";
+      Encoding@1000000013 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Text.Encoding";
+      filepath@1000000018 : Text[1024];
+      FileManager@1000000019 : Codeunit 419;
+      ClientFileName@1000000027 : Text;
+      LogoRec@1000000000 : Record 95568;
+      MyOutStream@1000000001 : OutStream;
+      MyInStream@1000000002 : InStream;
+      Bigtext@1000000003 : BigText;
+    BEGIN
+
+
+      // LogoRec.SETRANGE(ID,11,11);
+      // IF LogoRec.FINDSET THEN BEGIN
+      //   MESSAGE(FORMAT(LogoRec.LogoZPL.EXPORT));
+      //
+      //
+      //   LogoRec.LogoZPL.CREATEINSTREAM(MyInStream);
+      //   Bigtext.READ(MyInStream);
+      //   Bigtext.GETSUBTEXT(ClientFileName,1,1000);
+      //   MESSAGE(ClientFileName);
+      // END;
+
+      //  LogoRec.SETRANGE(ID,8,8);
+      // LogoRec.FINDSET;
+      // LogoRec.CALCFIELDS(LogoZPL);
+      // IF LogoRec.LogoZPL.HASVALUE THEN BEGIN
+      // LogoRec.LogoZPL.CREATEINSTREAM(MyInStream);
+      //  Bigtext.READ(MyInStream);
+      //  END;
+      //  ClientFileName := FORMAT(Bigtext);
+      //  MESSAGE(ClientFileName);
+
+      // LogoRec.LogoZPL.CREATEINSTREAM(MyInStream);
+      // MyInStream.READ(Bigtext);
+      //MESSAGE(FORMAT(LogoRec.ID) + ' blob: ' + FORMAT());
+
+      // filepath := FileManager.UploadFile('shubidua',ClientFileName);
+      // IF filepath <> '' THEN BEGIN
+      //  LogoRec.INIT;
+      //  LogoRec.Picture.IMPORT(filepath);
+      //  Uri := Uri.Uri('http://api.labelary.com/v1/graphics');
+      //  WebClient :=  WebClient.WebClient;
+      //  LogoRec.LogoZPL.CREATEOUTSTREAM(MyOutStream);
+      ClientFileName :=FORMAT(WebClient.UploadFile('http://api.labelary.com/v1/graphics', 'POST', filepath));
+      Bigtext.ADDTEXT(ClientFileName);
+      // //  Bigtext.ADDTEXT(FORMAT(Encoding.UTF8.GetString(WebClient.UploadFile('http://api.labelary.com/v1/graphics', 'POST', filepath))));
+      //  Bigtext.WRITE(MyOutStream);
+      //  LogoRec.INSERT;
+      //  MESSAGE('Should be inserted now kappalmao ' + FORMAT(LogoRec.ID));
+      // END ELSE BEGIN
+      //  MESSAGE('No files selected.');
+      // END;
+    END;
+
+    BEGIN
+    END.
+  }
+}
+
+OBJECT Codeunit 95479 UnitTest
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01-09-17;
+    Time=15:03:22;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    OnRun=VAR
+            WebClient@1000000000 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.WebClient";
+            WebRequest@1000000010 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Net.WebRequest";
+            Uri@1000000009 : DotNet "'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Uri";
+            Encoding@1000000008 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Text.Encoding";
+            filepath@1000000007 : Text;
+            FileManager@1000000006 : Codeunit 419;
+            ClientFileName@1000000005 : Text;
+            LogoRec@1000000004 : Record 95568;
+            MyOutStream@1000000003 : OutStream;
+            MyInStream@1000000002 : InStream;
+            Bigtext@1000000001 : BigText;
+            File@1000000011 : File;
+            MemoryStream@1000000012 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.IO.MemoryStream";
+            Image@1000000013 : DotNet "'System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.System.Drawing.Image";
+            imageformat@1000000014 : DotNet "'System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.System.Drawing.Imaging.ImageFormat";
+          BEGIN
+            filepath := FileManager.UploadFile('shubidua',ClientFileName);
+            IF filepath <> '' THEN BEGIN
+              Uri := Uri.Uri('http://api.labelary.com/v1/graphics');
+              WebClient :=  WebClient.WebClient;
+              ClientFileName :=FORMAT(Encoding.UTF8.GetString(WebClient.UploadFile('http://api.labelary.com/v1/graphics', 'POST', filepath)));
+              Bigtext.ADDTEXT(ClientFileName);
+              WebClient :=  WebClient.WebClient;
+            //  File.CREATE('c:\label\webservicetest.png');
+            //  File.CREATEOUTSTREAM(MyOutStream);
+              Uri := Uri.Uri('http://api.labelary.com/v1/printers/8dpmm/labels/4x6/0/');
+            //  MyOutStream.WRITE(FORMAT(Encoding.Default.GetBytes(WebClient.UploadString(Uri, 'POST' ,ClientFileName))));
+            //  File.CLOSE;
+            MemoryStream := MemoryStream.MemoryStream(Encoding.Default.GetBytes(WebClient.UploadString(Uri, 'POST' ,ClientFileName)));
+            Image := Image.FromStream(MemoryStream);
+            Image.Save('c:\label\snipsnipdethererlort.png', imageformat.Png);
+             END;
+          END;
+
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+
+OBJECT Page 31 Item List
+{
+  OBJECT-PROPERTIES
+  {
+    Date=29-08-17;
+    Time=13:50:01;
+    Modified=Yes;
+    Version List=NAVW110.00.00.17501;
+  }
+  PROPERTIES
+  {
+    Editable=No;
+    CaptionML=[DAN=Vareoversigt;
+               ENU=Item List];
+    SourceTable=Table27;
+    PageType=List;
+    CardPageID=Item Card;
+    RefreshOnActivate=Yes;
+    PromotedActionCategoriesML=[DAN=Ny,Behandl,RapportÇr,Vare,Oversigt,Specialpriser og -rabatter,Anmod om godkendelse,Periodiske aktiviteter,Lager,Attributter;
+                                ENU=New,Process,Report,Item,History,Special Prices & Discounts,Request Approval,Periodic Activities,Inventory,Attributes];
+    OnOpenPage=VAR
+                 CRMIntegrationManagement@1000 : Codeunit 5330;
+               BEGIN
+                 CRMIntegrationEnabled := CRMIntegrationManagement.IsCRMIntegrationEnabled;
+                 IsFoundationEnabled := ApplicationAreaSetup.IsFoundationEnabled;
+                 SetWorkflowManagementEnabledState;
+               END;
+
+    OnAfterGetRecord=BEGIN
+                       SetSocialListeningFactboxVisibility;
+                       EnableControls;
+                     END;
+
+    OnAfterGetCurrRecord=VAR
+                           CRMCouplingManagement@1001 : Codeunit 5331;
+                         BEGIN
+                           SetSocialListeningFactboxVisibility;
+
+                           CRMIsCoupledToRecord :=
+                             CRMCouplingManagement.IsRecordCoupledToCRM(RECORDID) AND CRMIntegrationEnabled;
+
+                           OpenApprovalEntriesExist := ApprovalsMgmt.HasOpenApprovalEntries(RECORDID);
+
+                           CanCancelApprovalForRecord := ApprovalsMgmt.CanCancelApprovalForRecord(RECORDID);
+                           CurrPage.ItemAttributesFactBox.PAGE.LoadItemAttributesData("No.");
+
+                           SetWorkflowManagementEnabledState;
+                         END;
+
+    ActionList=ACTIONS
+    {
+      { 1900000004;0 ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 64      ;1   ;ActionGroup;
+                      CaptionML=[DAN=Vare;
+                                 ENU=Item];
+                      Image=DataEntry }
+      { 25      ;2   ;Action    ;
+                      CaptionML=[DAN=En&heder;
+                                 ENU=&Units of Measure];
+                      ToolTipML=[DAN=Angiv de forskellige enheder, som en valgt vare kan handles i, f.eks. styk, boks eller time.;
+                                 ENU=Set up the different units that the selected item can be traded in, such as piece, box, or hour.];
+                      RunObject=Page 5404;
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=UnitOfMeasure;
+                      PromotedCategory=Category4;
+                      Scope=Repeater }
+      { 137     ;2   ;Action    ;
+                      Name=Attributes;
+                      AccessByPermission=TableData 7500=R;
+                      CaptionML=[DAN=Attributter;
+                                 ENU=Attributes];
+                      ToolTipML=[DAN=FÜ vist eller rediger varens attributter, f.eks. farve, stõrrelse eller andre egenskaber, der beskriver varen.;
+                                 ENU=View or edit the item's attributes, such as color, size, or other characteristics that help to describe the item.];
+                      Image=Category;
+                      PromotedCategory=Category4;
+                      Scope=Repeater;
+                      OnAction=BEGIN
+                                 PAGE.RUNMODAL(PAGE::"Item Attribute Value Editor",Rec);
+                                 CurrPage.SAVERECORD;
+                                 CurrPage.ItemAttributesFactBox.PAGE.LoadItemAttributesData("No.");
+                               END;
+                                }
+      { 138     ;2   ;Action    ;
+                      Name=FilterByAttributes;
+                      AccessByPermission=TableData 7500=R;
+                      CaptionML=[DAN=Filtrer efter attributter;
+                                 ENU=Filter by Attributes];
+                      ToolTipML=[DAN=Find varer, der matcher specifikke attributter.;
+                                 ENU=Find items that match specific attributes.];
+                      ApplicationArea=#Basic,#Suite;
+                      Promoted=Yes;
+                      Image=EditFilter;
+                      PromotedCategory=Category10;
+                      PromotedOnly=Yes;
+                      OnAction=VAR
+                                 TempFilteredItem@1005 : TEMPORARY Record 27;
+                                 ItemAttributeManagement@1002 : Codeunit 7500;
+                                 TypeHelper@1006 : Codeunit 10;
+                                 CloseAction@1003 : Action;
+                                 FilterText@1001 : Text;
+                                 FilterPageID@1000 : Integer;
+                                 ParameterCount@1004 : Integer;
+                               BEGIN
+                                 FilterPageID := PAGE::"Filter Items by Attribute";
+                                 IF CURRENTCLIENTTYPE = CLIENTTYPE::Phone THEN
+                                   FilterPageID := PAGE::"Filter Items by Att. Phone";
+
+                                 CloseAction := PAGE.RUNMODAL(FilterPageID,TempFilterItemAttributesBuffer);
+                                 IF (CURRENTCLIENTTYPE <> CLIENTTYPE::Phone) AND (CloseAction <> ACTION::LookupOK) THEN
+                                   EXIT;
+
+                                 ItemAttributeManagement.FindItemsByAttributes(TempFilterItemAttributesBuffer,TempFilteredItem);
+                                 FilterText := ItemAttributeManagement.GetItemNoFilterText(TempFilteredItem,ParameterCount);
+
+                                 IF ParameterCount < TypeHelper.GetMaxNumberOfParametersInSQLQuery - 100 THEN BEGIN
+                                   FILTERGROUP(0);
+                                   MARKEDONLY(FALSE);
+                                   SETFILTER("No.",FilterText);
+                                 END ELSE
+                                   IF TempFilteredItem.FINDSET THEN BEGIN
+                                     CLEARMARKS;
+                                     RESET;
+                                     REPEAT
+                                       GET(TempFilteredItem."No.");
+                                       MARK(TRUE);
+                                     UNTIL TempFilteredItem.NEXT = 0;
+                                     TempFilteredItem.FINDFIRST;
+                                     GET(TempFilteredItem."No.");
+                                     MARKEDONLY(TRUE);
+                                   END;
+                               END;
+                                }
+      { 139     ;2   ;Action    ;
+                      Name=ClearAttributes;
+                      AccessByPermission=TableData 7500=R;
+                      CaptionML=[DAN=Ryd attributfilter;
+                                 ENU=Clear Attributes Filter];
+                      ToolTipML=[DAN=Fjern filteret for specifikke vareattributter.;
+                                 ENU=Remove the filter for specific item attributes.];
+                      ApplicationArea=#Basic,#Suite;
+                      Promoted=Yes;
+                      Image=RemoveFilterLines;
+                      PromotedCategory=Category10;
+                      PromotedOnly=Yes;
+                      OnAction=BEGIN
+                                 CLEARMARKS;
+                                 MARKEDONLY(FALSE);
+                                 TempFilterItemAttributesBuffer.RESET;
+                                 TempFilterItemAttributesBuffer.DELETEALL;
+                                 FILTERGROUP(0);
+                                 SETRANGE("No.");
+                               END;
+                                }
+      { 30      ;2   ;Action    ;
+                      CaptionML=[DAN=V&arianter;
+                                 ENU=Va&riants];
+                      RunObject=Page 5401;
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=ItemVariant }
+      { 500     ;2   ;Action    ;
+                      CaptionML=[DAN=Erstat&ninger;
+                                 ENU=Substituti&ons];
+                      ApplicationArea=#Suite;
+                      RunObject=Page 5716;
+                      RunPageLink=Type=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=ItemSubstitution }
+      { 121     ;2   ;Action    ;
+                      CaptionML=[DAN=Id'er;
+                                 ENU=Identifiers];
+                      RunObject=Page 7706;
+                      RunPageView=SORTING(Item No.,Variant Code,Unit of Measure Code);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=BarCode }
+      { 82      ;2   ;Action    ;
+                      CaptionML=[DAN=Varere&ferencer;
+                                 ENU=Cross Re&ferences];
+                      ToolTipML=[DAN=Konfigurer en debitors eller kreditors egen identifikation af den valgte vare. Krydshenvisninger til debitorens varenummer betyder, at debitorens varenummer automatisk vises i salgsbilag i stedet for det nummer, du anvender.;
+                                 ENU=Set up a customer's or vendor's own identification of the selected item. Cross-references to the customer's item number means that the item number is automatically shown on sales documents instead of the number that you use.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Page 5721;
+                      RunPageLink=Item No.=FIELD(No.);
+                      Promoted=Yes;
+                      Image=Change;
+                      PromotedCategory=Category4;
+                      PromotedOnly=Yes;
+                      Scope=Repeater }
+      { 28      ;2   ;Action    ;
+                      CaptionML=[DAN=Udvidede &tekster;
+                                 ENU=E&xtended Texts];
+                      ToolTipML=[DAN=Angiv supplerende tekst som beskrivelse af den valgte vare. Den udvidede tekst kan indsëttes under feltet Beskrivelse i dokumentlinjerne for varen.;
+                                 ENU=Set up additional text for the description of the selected item. Extended text can be inserted under the Description field on document lines for the item.];
+                      RunObject=Page 391;
+                      RunPageView=SORTING(Table Name,No.,Language Code,All Language Codes,Starting Date,Ending Date);
+                      RunPageLink=Table Name=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=Text;
+                      Scope=Repeater }
+      { 27      ;2   ;Action    ;
+                      CaptionML=[DAN=Varetekster;
+                                 ENU=Translations];
+                      ToolTipML=[DAN=Angiv oversatte varebeskrivelser for den valgte vare. Oversatte varebeskrivelser indsëttes automatisk i dokumenter i overensstemmelse med sprogkode.;
+                                 ENU=Set up translated item descriptions for the selected item. Translated item descriptions are automatically inserted on documents according to the language code.];
+                      RunObject=Page 35;
+                      RunPageLink=Item No.=FIELD(No.),
+                                  Variant Code=CONST();
+                      Image=Translations;
+                      PromotedCategory=Category4;
+                      Scope=Repeater }
+      { 145     ;2   ;ActionGroup;
+                      Visible=False }
+      { 90      ;3   ;Action    ;
+                      Name=AdjustInventory;
+                      CaptionML=[DAN=Reguler lager;
+                                 ENU=Adjust Inventory];
+                      ToolTipML=[DAN=Forõg eller reducer varens lagerantal manuelt ved at angive et nyt antal. Det kan vëre relevant at regulere lagerantallet manuelt efter en fysisk optëlling, eller hvis du ikke registrerer indkõbte mëngder.;
+                                 ENU=Increase or decrease the item's inventory quantity manually by entering a new quantity. Adjusting the inventory quantity manually may be relevant after a physical count or if you do not record purchased quantities.];
+                      ApplicationArea=#Basic,#Suite;
+                      Promoted=Yes;
+                      Visible=IsFoundationEnabled;
+                      Enabled=InventoryItemEditable;
+                      Image=InventoryCalculation;
+                      PromotedCategory=Category4;
+                      PromotedOnly=Yes;
+                      Scope=Repeater;
+                      OnAction=BEGIN
+                                 COMMIT;
+                                 PAGE.RUNMODAL(PAGE::"Adjust Inventory",Rec)
+                               END;
+                                }
+      { 94      ;2   ;ActionGroup;
+                      CaptionML=[DAN=Dimensioner;
+                                 ENU=Dimensions];
+                      Image=Dimensions }
+      { 184     ;3   ;Action    ;
+                      Name=DimensionsSingle;
+                      ShortCutKey=Shift+Ctrl+D;
+                      CaptionML=[DAN=Dimensioner - enkelt;
+                                 ENU=Dimensions-Single];
+                      ApplicationArea=#Suite;
+                      RunObject=Page 540;
+                      RunPageLink=Table ID=CONST(27),
+                                  No.=FIELD(No.);
+                      Image=Dimensions;
+                      Scope=Repeater }
+      { 93      ;3   ;Action    ;
+                      Name=DimensionsMultiple;
+                      AccessByPermission=TableData 348=R;
+                      CaptionML=[DAN=Dimensioner - &flere;
+                                 ENU=Dimensions-&Multiple];
+                      ApplicationArea=#Suite;
+                      Image=DimensionSets;
+                      OnAction=VAR
+                                 Item@1001 : Record 27;
+                                 DefaultDimMultiple@1002 : Page 542;
+                               BEGIN
+                                 CurrPage.SETSELECTIONFILTER(Item);
+                                 DefaultDimMultiple.SetMultiItem(Item);
+                                 DefaultDimMultiple.RUNMODAL;
+                               END;
+                                }
+      { 1000000001;1 ;ActionGroup }
+      { 1000000000;2 ;Action    ;
+                      Name=Print Label;
+                      Promoted=Yes;
+                      PromotedCategory=New;
+                      OnAction=VAR
+                                 Item@1000000000 : Record 27;
+                                 ItemPrintReport@1000000001 : Page 95478;
+                               BEGIN
+                                  CLEAR(ItemPrintReport);
+                                  CurrPage.SETSELECTIONFILTER(Item);
+                                  ItemPrintReport.SETTABLEVIEW(Item);
+                                  ItemPrintReport.RUNMODAL();
+                               END;
+                                }
+      { 56      ;1   ;ActionGroup;
+                      CaptionML=[DAN=Oversigt;
+                                 ENU=History];
+                      Image=History }
+      { 84      ;2   ;ActionGroup;
+                      CaptionML=[DAN=Post&er;
+                                 ENU=E&ntries];
+                      Image=Entries }
+      { 14      ;3   ;Action    ;
+                      ShortCutKey=Ctrl+F7;
+                      CaptionML=[DAN=&Vareposter;
+                                 ENU=Ledger E&ntries];
+                      ToolTipML=[DAN=Vis historikken over positive og negative ëndringer i lagerbeholdningen, som afspejler transaktioner i forbindelse med varen.;
+                                 ENU=View the history of positive and negative inventory changes that reflect transactions with the selected item.];
+                      RunObject=Page 38;
+                      RunPageView=SORTING(Item No.)
+                                  ORDER(Descending);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=ItemLedger;
+                      PromotedCategory=Category5;
+                      Scope=Repeater }
+      { 23      ;3   ;Action    ;
+                      CaptionML=[DAN=&Lageropgõrelsesposter;
+                                 ENU=&Phys. Inventory Ledger Entries];
+                      RunObject=Page 390;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=PhysicalInventoryLedger;
+                      PromotedCategory=Category5;
+                      Scope=Repeater }
+      { 120     ;1   ;ActionGroup;
+                      Name=PricesandDiscounts;
+                      CaptionML=[DAN=Priser og rabatter;
+                                 ENU=Prices and Discounts] }
+      { 1901240604;2 ;Action    ;
+                      Name=Prices_Prices;
+                      CaptionML=[DAN=Specialpriser;
+                                 ENU=Special Prices];
+                      ToolTipML=[DAN=Angiv forskellige priser for den valgte vare. En varepris anvendes automatisk pÜ fakturalinjer, nÜr de specificerede kriterier er blevet opfyldt, f.eks. debitor, mëngde eller slutdato.;
+                                 ENU=Set up different prices for the selected item. An item price is automatically used on invoice lines when the specified criteria are met, such as customer, quantity, or ending date.];
+                      RunObject=Page 7002;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=Price;
+                      PromotedCategory=Category6;
+                      Scope=Repeater }
+      { 1900869004;2 ;Action    ;
+                      Name=Prices_LineDiscounts;
+                      CaptionML=[DAN=Specialrabatter;
+                                 ENU=Special Discounts];
+                      ToolTipML=[DAN=Angiv forskellige rabatter for den valgte vare. En varerabat anfõres automatisk pÜ fakturalinjer, nÜr de specificerede kriterier er blevet opfyldt, f.eks. debitor, mëngde eller slutdato.;
+                                 ENU=Set up different discounts for the selected item. An item discount is automatically granted on invoice lines when the specified criteria are met, such as customer, quantity, or ending date.];
+                      RunObject=Page 7004;
+                      RunPageView=SORTING(Type,Code);
+                      RunPageLink=Type=CONST(Item),
+                                  Code=FIELD(No.);
+                      Image=LineDiscount;
+                      PromotedCategory=Category6;
+                      Scope=Repeater }
+      { 133     ;2   ;Action    ;
+                      Name=PricesDiscountsOverview;
+                      CaptionML=[DAN=Oversigt over specialpriser og -rabatter;
+                                 ENU=Special Prices & Discounts Overview];
+                      Image=PriceWorksheet;
+                      PromotedCategory=Category6;
+                      OnAction=VAR
+                                 SalesPriceAndLineDiscounts@1000 : Page 1345;
+                               BEGIN
+                                 SalesPriceAndLineDiscounts.InitPage(TRUE);
+                                 SalesPriceAndLineDiscounts.LoadItem(Rec);
+                                 SalesPriceAndLineDiscounts.RUNMODAL;
+                               END;
+                                }
+      { 92      ;2   ;Action    ;
+                      CaptionML=[DAN=Salgspriskladde;
+                                 ENU=Sales Price Worksheet];
+                      RunObject=Page 7023;
+                      Image=PriceWorksheet;
+                      PromotedCategory=Category6 }
+      { 117     ;1   ;ActionGroup;
+                      CaptionML=[DAN=Periodiske aktiviteter;
+                                 ENU=Periodic Activities] }
+      { 1907108104;2 ;Action    ;
+                      CaptionML=[DAN=Juster kostpris - vareposter;
+                                 ENU=Adjust Cost - Item Entries];
+                      ToolTipML=[DAN=Regulerer lagervërdierne i vareposter, sÜ du kan bruge den korrekte, regulerede kostpris til opdatering af finansregnskabet, og sÜ salgs- og indtjeningsstatistikkerne er opdateret.;
+                                 ENU=Adjust inventory values in value entries so that you use the correct adjusted cost for updating the general ledger and so that sales and profit statistics are up to date.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Report 795;
+                      Image=AdjustEntries;
+                      PromotedCategory=Category8 }
+      { 96      ;2   ;Action    ;
+                      CaptionML=[DAN=Bogfõr lagerregulering;
+                                 ENU=Post Inventory Cost to G/L];
+                      ToolTipML=[DAN=Bogfõr ëndringen i antal og vërdi for lageret i vareposterne og vërdiposterne, nÜr du bogfõrer lagertransaktioner som f.eks. salgsleverancer eller kõbsfakturaer.;
+                                 ENU=Post the quantity and value changes to the inventory in the item ledger entries and the value entries when you post inventory transactions, such as sales shipments or purchase receipts.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Report 1002;
+                      Image=PostInventoryToGL;
+                      PromotedCategory=Category8 }
+      { 98      ;2   ;Action    ;
+                      CaptionML=[DAN=Lageropgõrelseskladde;
+                                 ENU=Physical Inventory Journal];
+                      ToolTipML=[DAN=Vëlg, hvordan du vil fastholde en opdateret record over lageret pÜ forskellige lokationer.;
+                                 ENU=Select how you want to maintain an up-to-date record of your inventory at different locations.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Page 392;
+                      Image=PhysicalInventory;
+                      PromotedCategory=Category8 }
+      { 119     ;2   ;Action    ;
+                      CaptionML=[DAN=Vërdireguleringskladde;
+                                 ENU=Revaluation Journal];
+                      ToolTipML=[DAN=Se eller rediger lagervërdien af varer, som du kan ëndre, f.eks nÜr du har foretaget en lageropgõrelse.;
+                                 ENU=View or edit the inventory value of items, which you can change, such as after doing a physical inventory.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Page 5803;
+                      Image=Journal;
+                      PromotedCategory=Category8 }
+      { 88      ;1   ;ActionGroup;
+                      CaptionML=[DAN=Anmod om godkendelse;
+                                 ENU=Request Approval];
+                      Image=SendApprovalRequest }
+      { 87      ;2   ;Action    ;
+                      Name=SendApprovalRequest;
+                      CaptionML=[DAN=Send godkendelsesan&modning;
+                                 ENU=Send A&pproval Request];
+                      ToolTipML=[DAN=Send en godkendelsesanmodning.;
+                                 ENU=Send an approval request.];
+                      Promoted=Yes;
+                      Enabled=(NOT OpenApprovalEntriesExist) AND EnabledApprovalWorkflowsExist;
+                      Image=SendApprovalRequest;
+                      PromotedCategory=Category7;
+                      OnAction=VAR
+                                 ApprovalsMgmt@1001 : Codeunit 1535;
+                               BEGIN
+                                 IF ApprovalsMgmt.CheckItemApprovalsWorkflowEnabled(Rec) THEN
+                                   ApprovalsMgmt.OnSendItemForApproval(Rec);
+                               END;
+                                }
+      { 86      ;2   ;Action    ;
+                      Name=CancelApprovalRequest;
+                      CaptionML=[DAN=Annuller godk&endelsesanmodning;
+                                 ENU=Cancel Approval Re&quest];
+                      ToolTipML=[DAN=Annuller godkendelsesanmodningen.;
+                                 ENU=Cancel the approval request.];
+                      Promoted=Yes;
+                      Enabled=CanCancelApprovalForRecord;
+                      Image=CancelApprovalRequest;
+                      PromotedCategory=Category7;
+                      OnAction=VAR
+                                 ApprovalsMgmt@1001 : Codeunit 1535;
+                               BEGIN
+                                 ApprovalsMgmt.OnCancelItemApprovalRequest(Rec);
+                               END;
+                                }
+      { 135     ;1   ;ActionGroup;
+                      CaptionML=[DAN=Workflow;
+                                 ENU=Workflow] }
+      { 134     ;2   ;Action    ;
+                      Name=CreateApprovalWorkflow;
+                      CaptionML=[DAN=Opret godkendelsesworkflow;
+                                 ENU=Create Approval Workflow];
+                      ToolTipML=[DAN=Opret et godkendelsesworkflow for oprettelse og ëndring af varer ved at gennemgÜ et par sider med instruktioner.;
+                                 ENU=Set up an approval workflow for creating or changing items, by going through a few pages that will guide you.];
+                      ApplicationArea=#Suite;
+                      Enabled=NOT EnabledApprovalWorkflowsExist;
+                      Image=CreateWorkflow;
+                      OnAction=BEGIN
+                                 PAGE.RUNMODAL(PAGE::"Item Approval WF Setup Wizard");
+                               END;
+                                }
+      { 20      ;2   ;Action    ;
+                      Name=ManageApprovalWorkflow;
+                      CaptionML=[DAN=Administrer godkendelsesworkflow;
+                                 ENU=Manage Approval Workflow];
+                      ToolTipML=[DAN=Se eller rediger eksisterende godkendelsesworkflows for oprettelse og ëndring af varer.;
+                                 ENU=View or edit existing approval workflows for creating or changing items.];
+                      ApplicationArea=#Suite;
+                      Enabled=EnabledApprovalWorkflowsExist;
+                      Image=WorkflowSetup;
+                      OnAction=VAR
+                                 WorkflowManagement@1000 : Codeunit 1501;
+                               BEGIN
+                                 WorkflowManagement.NavigateToWorkflows(DATABASE::Item,EventFilter);
+                               END;
+                                }
+      { 110     ;1   ;ActionGroup;
+                      CaptionML=[DAN=Fu&nktion;
+                                 ENU=F&unctions];
+                      Image=Action }
+      { 111     ;2   ;Action    ;
+                      AccessByPermission=TableData 5700=R;
+                      CaptionML=[DAN=&Opret lagervare (pr. lokation);
+                                 ENU=&Create Stockkeeping Unit];
+                      Image=CreateSKU;
+                      OnAction=VAR
+                                 Item@1001 : Record 27;
+                               BEGIN
+                                 Item.SETRANGE("No.","No.");
+                                 REPORT.RUNMODAL(REPORT::"Create Stockkeeping Unit",TRUE,FALSE,Item);
+                               END;
+                                }
+      { 7380    ;2   ;Action    ;
+                      AccessByPermission=TableData 7380=R;
+                      CaptionML=[DAN=Beregn optëllingsperio&de;
+                                 ENU=C&alculate Counting Period];
+                      Image=CalculateCalendar;
+                      OnAction=VAR
+                                 Item@1001 : Record 27;
+                                 PhysInvtCountMgt@1000 : Codeunit 7380;
+                               BEGIN
+                                 CurrPage.SETSELECTIONFILTER(Item);
+                                 PhysInvtCountMgt.UpdateItemPhysInvtCount(Item);
+                               END;
+                                }
+      { 1905370404;1 ;Action    ;
+                      CaptionML=[DAN=Indkõbskladde;
+                                 ENU=Requisition Worksheet];
+                      RunObject=Page 291;
+                      Image=Worksheet }
+      { 1904344904;1 ;Action    ;
+                      CaptionML=[DAN=Varekladde;
+                                 ENU=Item Journal];
+                      RunObject=Page 40;
+                      Promoted=Yes;
+                      Image=Journals;
+                      PromotedCategory=Process }
+      { 1906716204;1 ;Action    ;
+                      CaptionML=[DAN=Vareomposteringskladde;
+                                 ENU=Item Reclassification Journal];
+                      RunObject=Page 393;
+                      Promoted=Yes;
+                      Image=Journals;
+                      PromotedCategory=Process }
+      { 1902532604;1 ;Action    ;
+                      CaptionML=[DAN=Varesporing;
+                                 ENU=Item Tracing];
+                      RunObject=Page 6520;
+                      Image=ItemTracing }
+      { 1900805004;1 ;Action    ;
+                      CaptionML=[DAN=Reguler varepris;
+                                 ENU=Adjust Item Cost/Price];
+                      RunObject=Report 794;
+                      Image=AdjustItemCost }
+      { 1900000006;0 ;ActionContainer;
+                      ActionContainerType=Reports }
+      { 127     ;1   ;ActionGroup;
+                      CaptionML=[DAN=Montage/produktion;
+                                 ENU=Assembly/Production] }
+      { 18      ;2   ;Action    ;
+                      CaptionML=[DAN=Montage til ordre - salg;
+                                 ENU=Assemble to Order - Sales];
+                      RunObject=Report 915;
+                      Image=Report }
+      { 1902353206;2 ;Action    ;
+                      CaptionML=[DAN=IndgÜr-i (hõjeste niveau);
+                                 ENU=Where-Used (Top Level)];
+                      RunObject=Report 99000757;
+                      Image=Report }
+      { 1907778006;2 ;Action    ;
+                      CaptionML=[DAN=Styklisteudfold. - antal;
+                                 ENU=Quantity Explosion of BOM];
+                      RunObject=Report 99000753;
+                      Image=Report }
+      { 132     ;2   ;ActionGroup;
+                      CaptionML=[DAN=Kostprisberegning;
+                                 ENU=Costing];
+                      Image=ItemCosts }
+      { 1907928706;3 ;Action    ;
+                      CaptionML=[DAN=Lagervërdi - igangvërende arb.;
+                                 ENU=Inventory Valuation - WIP];
+                      RunObject=Report 5802;
+                      Image=Report }
+      { 1905889606;3 ;Action    ;
+                      CaptionML=[DAN=Grundlag for kostprisfordeling;
+                                 ENU=Cost Shares Breakdown];
+                      RunObject=Report 5848;
+                      Image=Report }
+      { 1901374406;3 ;Action    ;
+                      CaptionML=[DAN=Detaljeret beregning;
+                                 ENU=Detailed Calculation];
+                      RunObject=Report 99000756;
+                      Image=Report }
+      { 1900812706;3 ;Action    ;
+                      CaptionML=[DAN=Kostprisfordeling - akk.;
+                                 ENU=Rolled-up Cost Shares];
+                      RunObject=Report 99000754;
+                      Image=Report }
+      { 1901316306;3 ;Action    ;
+                      CaptionML=[DAN=Kostprisfordeling (enkeltniv.);
+                                 ENU=Single-Level Cost Shares];
+                      RunObject=Report 99000755;
+                      Image=Report }
+      { 128     ;1   ;ActionGroup;
+                      CaptionML=[DAN=Lager;
+                                 ENU=Inventory] }
+      { 1900907306;2 ;Action    ;
+                      CaptionML=[DAN=Vare - stamoplysninger;
+                                 ENU=Inventory - List];
+                      RunObject=Report 701;
+                      Image=Report }
+      { 1906212206;2 ;Action    ;
+                      CaptionML=[DAN=Vare - disponeringsoversigt;
+                                 ENU=Inventory - Availability Plan];
+                      RunObject=Report 707;
+                      Image=ItemAvailability }
+      { 1900430206;2 ;Action    ;
+                      CaptionML=[DAN=Vare/leverandõrer;
+                                 ENU=Item/Vendor Catalog];
+                      RunObject=Report 720;
+                      Image=Report }
+      { 1907644006;2 ;Action    ;
+                      CaptionML=[DAN=Lageropgõrelsesoversigt;
+                                 ENU=Phys. Inventory List];
+                      RunObject=Report 722;
+                      Image=Report }
+      { 1907253406;2 ;Action    ;
+                      CaptionML=[DAN=Katalogvaresalg;
+                                 ENU=Nonstock Item Sales];
+                      RunObject=Report 5700;
+                      Image=Report }
+      { 1905753506;2 ;Action    ;
+                      CaptionML=[DAN=Erstatningsvarer;
+                                 ENU=Item Substitutions];
+                      ToolTipML=[DAN=Vis eller rediger alle stedfortrëdervarer, der er konfigureret til at blive solgt i stedet for varen, hvis den ikke er tilgëngelig.;
+                                 ENU=View or edit any substitute items that are set up to be traded instead of the item in case it is not available.];
+                      ApplicationArea=#Suite;
+                      RunObject=Report 5701;
+                      Image=Report }
+      { 1905572506;2 ;Action    ;
+                      CaptionML=[DAN=Prisliste;
+                                 ENU=Price List];
+                      ToolTipML=[DAN=Vis, udskriv, eller gem en liste over dine varer samt oplysninger om priser og omkostninger pÜ disse med henblik pÜ at sende den til debitorerne. Du kan oprette listen til specifikke debitorer, kampagner, valutaer eller til andre formÜl.;
+                                 ENU=View, print, or save a list of your items and their prices, for example, to send to customers. You can create the list for specific customers, campaigns, currencies, or other criteria.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Report 715;
+                      Promoted=Yes;
+                      Image=Report;
+                      PromotedCategory=Category9 }
+      { 1900128906;2 ;Action    ;
+                      CaptionML=[DAN=Intern prisliste;
+                                 ENU=Inventory Cost and Price List];
+                      ToolTipML=[DAN=Vis, udskriv, eller gem en liste over dine varer og oplysninger om priser og omkostninger pÜ disse. Rapporten specificerer den direkte vareomkostning sidste direkte omkostning, enhedspris, avanceprocent og avance.;
+                                 ENU=View, print, or save a list of your items and their price and cost information. The report specifies direct unit cost, last direct cost, unit price, profit percentage, and profit.];
+                      RunObject=Report 716;
+                      Image=Report }
+      { 1901091106;2 ;Action    ;
+                      CaptionML=[DAN=Varedisponering;
+                                 ENU=Inventory Availability];
+                      ToolTipML=[DAN=Vis, udskriv eller gem en historikoversigt over lagertransaktioner pr. valgte varer, f.eks. for at beslutte, hvornÜr varerne skal indkõbes. Rapporten specificerer antallet af salgsordrer, kõbsordrer, restordrer fra kreditorer, minimumslageret og eventuelle genbestillinger.;
+                                 ENU=View, print, or save a summary of historical inventory transactions with selected items, for example, to decide when to purchase the items. The report specifies quantity on sales order, quantity on purchase order, back orders from vendors, minimum inventory, and whether there are reorders.];
+                      RunObject=Report 705;
+                      Image=Report }
+      { 131     ;2   ;ActionGroup;
+                      CaptionML=[DAN=Varejournal;
+                                 ENU=Item Register];
+                      Image=ItemRegisters }
+      { 1907629906;3 ;Action    ;
+                      CaptionML=[DAN=Varejournal - antal;
+                                 ENU=Item Register - Quantity];
+                      RunObject=Report 703;
+                      Image=Report }
+      { 1902962906;3 ;Action    ;
+                      CaptionML=[DAN=Varejournal - vërdi;
+                                 ENU=Item Register - Value];
+                      RunObject=Report 5805;
+                      Image=Report }
+      { 130     ;2   ;ActionGroup;
+                      CaptionML=[DAN=Kostprisberegning;
+                                 ENU=Costing];
+                      Image=ItemCosts }
+      { 1900730006;3 ;Action    ;
+                      CaptionML=[DAN=Vare - prisafvigelser;
+                                 ENU=Inventory - Cost Variance];
+                      RunObject=Report 721;
+                      Image=ItemCosts }
+      { 1904299906;3 ;Action    ;
+                      CaptionML=[DAN=Lagervërdi - kostspecifikation;
+                                 ENU=Invt. Valuation - Cost Spec.];
+                      RunObject=Report 5801;
+                      Image=Report }
+      { 1907846806;3 ;Action    ;
+                      CaptionML=[DAN=Sammenligningsoversigt;
+                                 ENU=Compare List];
+                      RunObject=Report 99000758;
+                      Image=Report }
+      { 100     ;2   ;ActionGroup;
+                      CaptionML=[DAN=Lagerbeholdningsdetaljer;
+                                 ENU=Inventory Details];
+                      Image=Report }
+      { 1904068306;3 ;Action    ;
+                      CaptionML=[DAN=Vare - kontokort;
+                                 ENU=Inventory - Transaction Detail];
+                      RunObject=Report 704;
+                      Image=Report }
+      { 1900461506;3 ;Action    ;
+                      CaptionML=[DAN=Varegebyrer - specifikation;
+                                 ENU=Item Charges - Specification];
+                      RunObject=Report 5806;
+                      Image=Report }
+      { 1900111206;3 ;Action    ;
+                      CaptionML=[DAN=Beholdningsëndring - antal;
+                                 ENU=Item Age Composition - Qty.];
+                      ToolTipML=[DAN=Vis, udskriv eller gem en oversigt over den aktuelle alderssammensëtning pÜ bestemte varer i lagerbeholdningen.;
+                                 ENU=View, print, or save an overview of the current age composition of selected items in your inventory.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Report 5807;
+                      Image=Report }
+      { 1906747006;3 ;Action    ;
+                      CaptionML=[DAN=Vareudlõb - antal;
+                                 ENU=Item Expiration - Quantity];
+                      RunObject=Report 5809;
+                      Image=Report }
+      { 102     ;2   ;ActionGroup;
+                      Name=Reports;
+                      CaptionML=[DAN=Lagerbeholdningsstatistik;
+                                 ENU=Inventory Statistics];
+                      Image=Report }
+      { 1900762706;3 ;Action    ;
+                      CaptionML=[DAN=Vare - salgsstatistik;
+                                 ENU=Inventory - Sales Statistics];
+                      ToolTipML=[DAN=Vis, udskriv eller gem en oversigt over varesalg pr. debitor, f.eks. med henblik pÜ at analysere avancen pÜ individuelle varer eller for at se avancetendenser. Rapporten specificerer direkte kõbspris, enhedspris, salgsantal, salg i den lokale valuta, avanceprocent og avance.;
+                                 ENU=View, print, or save a summary of selected items' sales per customer, for example, to analyze the profit on individual items or trends in revenues and profit. The report specifies direct unit cost, unit price, sales quantity, sales in LCY, profit percentage, and profit.];
+                      ApplicationArea=#Suite;
+                      RunObject=Report 712;
+                      Image=Report }
+      { 1904034006;3 ;Action    ;
+                      CaptionML=[DAN=Vare/kundestatistik;
+                                 ENU=Inventory - Customer Sales];
+                      ToolTipML=[DAN=Vis, udskriv eller gem en liste over debitorer, der har kõbt bestemte varer inden for en bestemt periode, f.eks. med henblik pÜ at analysere debitorers kõbsmõnstre. Rapporten specificerer beholdning, mëngde, rabat, avanceprocent og avance.;
+                                 ENU=View, print, or save a list of customers that have purchased selected items within a selected period, for example, to analyze customers' purchasing patterns. The report specifies quantity, amount, discount, profit percentage, and profit.];
+                      ApplicationArea=#Suite;
+                      RunObject=Report 713;
+                      Image=Report }
+      { 1907930606;3 ;Action    ;
+                      CaptionML=[DAN=Vare - top 10-liste;
+                                 ENU=Inventory - Top 10 List];
+                      ToolTipML=[DAN=Se, udskriv eller gem en liste over de vigtigste varer efter salg, disponibelt antal eller lagervërdi. Rapporten indeholder et sõjlediagram, der viser, hvordan varerne er rangeret.;
+                                 ENU=View, print, or save a list of the top items by sales, quantity on hand, or inventory value. The report includes a bar graph to show you how the items rank.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Report 711;
+                      Image=Report }
+      { 104     ;2   ;ActionGroup;
+                      CaptionML=[DAN=Finansrapporter;
+                                 ENU=Finance Reports];
+                      Image=Report }
+      { 1906316306;3 ;Action    ;
+                      CaptionML=[DAN=Lagervërdi;
+                                 ENU=Inventory Valuation];
+                      ToolTipML=[DAN=Se, udskriv eller gem en liste over vërdier for det disponible antal af hver lagervare.;
+                                 ENU=View, print, or save a list of the values of the on-hand quantity of each inventory item.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Report 1001;
+                      Image=Report }
+      { 1901254106;3 ;Action    ;
+                      CaptionML=[DAN=Status;
+                                 ENU=Status];
+                      ToolTipML=[DAN=Se, udskriv eller gem status for delvist udfyldte eller ikke-udfyldte ordrer, sÜ du kan angive, hvordan en opfyldning af disse ordrer pÜvirker lagerbeholdningen.;
+                                 ENU=View, print, or save the status of partially filled or unfilled orders so you can determine what effect filling these orders may have on your inventory.];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Report 706;
+                      Image=Report }
+      { 1903496006;3 ;Action    ;
+                      CaptionML=[DAN=Beholdningsëndring - vërdi;
+                                 ENU=Item Age Composition - Value];
+                      ToolTipML=[DAN=Vis, udskriv eller gem en oversigt over den aktuelle alderssammensëtning pÜ bestemte varer i lagerbeholdningen.;
+                                 ENU=View, print, or save an overview of the current age composition of selected items in your inventory.];
+                      RunObject=Report 5808;
+                      Image=Report }
+      { 129     ;1   ;ActionGroup;
+                      CaptionML=[DAN=Ordrer;
+                                 ENU=Orders] }
+      { 1903262806;2 ;Action    ;
+                      CaptionML=[DAN=Varer i salgsordrer;
+                                 ENU=Inventory Order Details];
+                      RunObject=Report 708;
+                      Image=Report }
+      { 1904739806;2 ;Action    ;
+                      CaptionML=[DAN=Varer i kõbsordrer;
+                                 ENU=Inventory Purchase Orders];
+                      RunObject=Report 709;
+                      Image=Report }
+      { 1906231806;2 ;Action    ;
+                      CaptionML=[DAN=Vare/leverandõrstatistik;
+                                 ENU=Inventory - Vendor Purchases];
+                      RunObject=Report 714;
+                      Image=Report }
+      { 1906101206;2 ;Action    ;
+                      CaptionML=[DAN=Vare - genbestillingsliste;
+                                 ENU=Inventory - Reorders];
+                      RunObject=Report 717;
+                      Promoted=Yes;
+                      Image=Report;
+                      PromotedCategory=Report }
+      { 1900210306;2 ;Action    ;
+                      CaptionML=[DAN=Vare - restordrer til kunder;
+                                 ENU=Inventory - Sales Back Orders];
+                      RunObject=Report 718;
+                      Promoted=Yes;
+                      Image=Report;
+                      PromotedCategory=Report }
+      { 1900000003;0 ;ActionContainer;
+                      ActionContainerType=RelatedInformation }
+      { 126     ;1   ;ActionGroup;
+                      CaptionML=[DAN=Vare;
+                                 ENU=Item] }
+      { 123     ;2   ;Action    ;
+                      Name=ApprovalEntries;
+                      AccessByPermission=TableData 454=R;
+                      CaptionML=[DAN=Godkendelser;
+                                 ENU=Approvals];
+                      ToolTipML=[DAN=FÜ vist en liste over records, der afventer godkendelse. Du kan f.eks. se, hvem der har anmodet om godkendelse af recorden, hvornÜr den blev sendt og hvornÜr den skal godkendes.;
+                                 ENU=View a list of the records that are waiting to be approved. For example, you can see who requested the record to be approved, when it was sent, and when it is due to be approved.];
+                      ApplicationArea=#Suite;
+                      Promoted=Yes;
+                      Image=Approvals;
+                      PromotedCategory=Category4;
+                      PromotedOnly=Yes;
+                      OnAction=BEGIN
+                                 ApprovalsMgmt.OpenApprovalEntriesPage(RECORDID);
+                               END;
+                                }
+      { 10      ;1   ;ActionGroup;
+                      CaptionML=[DAN=Disponering;
+                                 ENU=Availability];
+                      Image=Item }
+      { 73      ;2   ;Action    ;
+                      AccessByPermission=TableData 14=R;
+                      CaptionML=[DAN=Varer p&r. lokation;
+                                 ENU=Items b&y Location];
+                      ToolTipML=[DAN=Viser en liste over varer grupperet efter lokation.;
+                                 ENU=Show a list of items grouped by location.];
+                      Image=ItemAvailbyLoc;
+                      OnAction=BEGIN
+                                 PAGE.RUN(PAGE::"Items by Location",Rec);
+                               END;
+                                }
+      { 79      ;2   ;ActionGroup;
+                      CaptionML=[DAN=&Varedisponering pr.;
+                                 ENU=&Item Availability by];
+                      Image=ItemAvailability }
+      { 5       ;3   ;Action    ;
+                      Name=<Action5>;
+                      CaptionML=[DAN=Begivenhed;
+                                 ENU=Event];
+                      Image=Event;
+                      OnAction=BEGIN
+                                 ItemAvailFormsMgt.ShowItemAvailFromItem(Rec,ItemAvailFormsMgt.ByEvent);
+                               END;
+                                }
+      { 21      ;3   ;Action    ;
+                      CaptionML=[DAN=Periode;
+                                 ENU=Period];
+                      RunObject=Page 157;
+                      RunPageLink=No.=FIELD(No.),
+                                  Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                                  Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter),
+                                  Location Filter=FIELD(Location Filter),
+                                  Drop Shipment Filter=FIELD(Drop Shipment Filter),
+                                  Variant Filter=FIELD(Variant Filter);
+                      Image=Period }
+      { 80      ;3   ;Action    ;
+                      CaptionML=[DAN=Variant;
+                                 ENU=Variant];
+                      RunObject=Page 5414;
+                      RunPageLink=No.=FIELD(No.),
+                                  Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                                  Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter),
+                                  Location Filter=FIELD(Location Filter),
+                                  Drop Shipment Filter=FIELD(Drop Shipment Filter),
+                                  Variant Filter=FIELD(Variant Filter);
+                      Image=ItemVariant }
+      { 78      ;3   ;Action    ;
+                      CaptionML=[DAN=Lokation;
+                                 ENU=Location];
+                      RunObject=Page 492;
+                      RunPageLink=No.=FIELD(No.),
+                                  Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                                  Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter),
+                                  Location Filter=FIELD(Location Filter),
+                                  Drop Shipment Filter=FIELD(Drop Shipment Filter),
+                                  Variant Filter=FIELD(Variant Filter);
+                      Image=Warehouse }
+      { 13      ;3   ;Action    ;
+                      CaptionML=[DAN=Styklisteniveau;
+                                 ENU=BOM Level];
+                      Image=BOMLevel;
+                      OnAction=BEGIN
+                                 ItemAvailFormsMgt.ShowItemAvailFromItem(Rec,ItemAvailFormsMgt.ByBOM);
+                               END;
+                                }
+      { 19      ;3   ;Action    ;
+                      CaptionML=[DAN=Tidslinje;
+                                 ENU=Timeline];
+                      Image=Timeline;
+                      OnAction=BEGIN
+                                 ShowTimelineFromItem(Rec);
+                               END;
+                                }
+      { 83      ;1   ;ActionGroup;
+                      Name=ActionGroupCRM;
+                      CaptionML=[DAN=Dynamics CRM;
+                                 ENU=Dynamics CRM];
+                      Visible=CRMIntegrationEnabled }
+      { 75      ;2   ;Action    ;
+                      Name=CRMGoToProduct;
+                      CaptionML=[DAN=Produkt;
+                                 ENU=Product];
+                      ToolTipML=[DAN=èbn det sammenkëdede Microsoft Dynamics CRM-produkt.;
+                                 ENU=Open the coupled Microsoft Dynamics CRM product.];
+                      ApplicationArea=#All;
+                      Image=CoupledItem;
+                      OnAction=VAR
+                                 CRMIntegrationManagement@1000 : Codeunit 5330;
+                               BEGIN
+                                 CRMIntegrationManagement.ShowCRMEntityFromRecordID(RECORDID);
+                               END;
+                                }
+      { 72      ;2   ;Action    ;
+                      Name=CRMSynchronizeNow;
+                      AccessByPermission=TableData 5331=IM;
+                      CaptionML=[DAN=Synkroniser nu;
+                                 ENU=Synchronize Now];
+                      ToolTipML=[DAN=Send opdaterede data til Microsoft Dynamics CRM.;
+                                 ENU=Send updated data to Microsoft Dynamics CRM.];
+                      ApplicationArea=#All;
+                      Image=Refresh;
+                      OnAction=VAR
+                                 Item@1000 : Record 27;
+                                 CRMIntegrationManagement@1001 : Codeunit 5330;
+                                 ItemRecordRef@1003 : RecordRef;
+                               BEGIN
+                                 CurrPage.SETSELECTIONFILTER(Item);
+                                 Item.NEXT;
+
+                                 IF Item.COUNT = 1 THEN
+                                   CRMIntegrationManagement.UpdateOneNow(Item.RECORDID)
+                                 ELSE BEGIN
+                                   ItemRecordRef.GETTABLE(Item);
+                                   CRMIntegrationManagement.UpdateMultipleNow(ItemRecordRef);
+                                 END
+                               END;
+                                }
+      { 70      ;2   ;ActionGroup;
+                      Name=Coupling;
+                      CaptionML=[@@@=Coupling is a noun;
+                                 DAN=Sammenkëdning;
+                                 ENU=Coupling];
+                      ToolTipML=[DAN=Opret, rediger eller slet en sammenkëdning mellem Microsoft Dynamics NAV-recorden og en Microsoft Dynamics CRM-record.;
+                                 ENU=Create, change, or delete a coupling between the Microsoft Dynamics NAV record and a Microsoft Dynamics CRM record.];
+                      Image=LinkAccount }
+      { 68      ;3   ;Action    ;
+                      Name=ManageCRMCoupling;
+                      AccessByPermission=TableData 5331=IM;
+                      CaptionML=[DAN=Konfigurer sammenkëdning;
+                                 ENU=Set Up Coupling];
+                      ToolTipML=[DAN=Opret eller rediger sammenkëdningen med et Microsoft Dynamics CRM-produkt.;
+                                 ENU=Create or modify the coupling to a Microsoft Dynamics CRM product.];
+                      ApplicationArea=#All;
+                      Image=LinkAccount;
+                      OnAction=VAR
+                                 CRMIntegrationManagement@1000 : Codeunit 5330;
+                               BEGIN
+                                 CRMIntegrationManagement.DefineCoupling(RECORDID);
+                               END;
+                                }
+      { 66      ;3   ;Action    ;
+                      Name=DeleteCRMCoupling;
+                      AccessByPermission=TableData 5331=IM;
+                      CaptionML=[DAN=Slet sammenkëdning;
+                                 ENU=Delete Coupling];
+                      ToolTipML=[DAN=Slet sammenkëdningen med et Microsoft Dynamics CRM-produkt.;
+                                 ENU=Delete the coupling to a Microsoft Dynamics CRM product.];
+                      ApplicationArea=#All;
+                      Enabled=CRMIsCoupledToRecord;
+                      Image=UnLinkAccount;
+                      OnAction=VAR
+                                 CRMCouplingManagement@1000 : Codeunit 5331;
+                               BEGIN
+                                 CRMCouplingManagement.RemoveCoupling(RECORDID);
+                               END;
+                                }
+      { 54      ;1   ;ActionGroup;
+                      Name=Assembly/Production;
+                      CaptionML=[DAN=Montage/produktion;
+                                 ENU=Assembly/Production];
+                      Image=Production }
+      { 52      ;2   ;Action    ;
+                      CaptionML=[DAN=Struktur;
+                                 ENU=Structure];
+                      Image=Hierarchy;
+                      OnAction=VAR
+                                 BOMStructure@1000 : Page 5870;
+                               BEGIN
+                                 BOMStructure.InitItem(Rec);
+                                 BOMStructure.RUN;
+                               END;
+                                }
+      { 50      ;2   ;Action    ;
+                      CaptionML=[DAN=Kostprisfordelinger;
+                                 ENU=Cost Shares];
+                      Image=CostBudget;
+                      OnAction=VAR
+                                 BOMCostShares@1000 : Page 5872;
+                               BEGIN
+                                 BOMCostShares.InitItem(Rec);
+                                 BOMCostShares.RUN;
+                               END;
+                                }
+      { 49      ;2   ;ActionGroup;
+                      CaptionML=[DAN=&Montage;
+                                 ENU=Assemb&ly];
+                      Image=AssemblyBOM }
+      { 48      ;3   ;Action    ;
+                      Name=<Action32>;
+                      CaptionML=[DAN=Montagestykliste;
+                                 ENU=Assembly BOM];
+                      RunObject=Page 36;
+                      RunPageLink=Parent Item No.=FIELD(No.);
+                      Image=BOM }
+      { 47      ;3   ;Action    ;
+                      CaptionML=[DAN=IndgÜr-i;
+                                 ENU=Where-Used];
+                      RunObject=Page 37;
+                      RunPageView=SORTING(Type,No.);
+                      RunPageLink=Type=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=Track }
+      { 46      ;3   ;Action    ;
+                      AccessByPermission=TableData 90=R;
+                      CaptionML=[DAN=&Beregn kostpris;
+                                 ENU=Calc. Stan&dard Cost];
+                      Image=CalculateCost;
+                      OnAction=BEGIN
+                                 CalculateStdCost.CalcItem("No.",TRUE);
+                               END;
+                                }
+      { 44      ;3   ;Action    ;
+                      AccessByPermission=TableData 90=R;
+                      CaptionML=[DAN=Beregn enhedspris;
+                                 ENU=Calc. Unit Price];
+                      Image=SuggestItemPrice;
+                      OnAction=BEGIN
+                                 CalculateStdCost.CalcAssemblyItemPrice("No.");
+                               END;
+                                }
+      { 41      ;2   ;ActionGroup;
+                      CaptionML=[DAN=Produktion;
+                                 ENU=Production];
+                      Image=Production }
+      { 32      ;3   ;Action    ;
+                      CaptionML=[DAN=Produktionsstykliste;
+                                 ENU=Production BOM];
+                      RunObject=Page 99000786;
+                      RunPageLink=No.=FIELD(Production BOM No.);
+                      Image=BOM }
+      { 29      ;3   ;Action    ;
+                      AccessByPermission=TableData 90=R;
+                      CaptionML=[DAN=IndgÜr-i;
+                                 ENU=Where-Used];
+                      Image=Where-Used;
+                      OnAction=VAR
+                                 ProdBOMWhereUsed@1001 : Page 99000811;
+                               BEGIN
+                                 ProdBOMWhereUsed.SetItem(Rec,WORKDATE);
+                                 ProdBOMWhereUsed.RUNMODAL;
+                               END;
+                                }
+      { 24      ;3   ;Action    ;
+                      AccessByPermission=TableData 99000771=R;
+                      CaptionML=[DAN=&Beregn kostpris;
+                                 ENU=Calc. Stan&dard Cost];
+                      Image=CalculateCost;
+                      OnAction=BEGIN
+                                 CalculateStdCost.CalcItem("No.",FALSE);
+                               END;
+                                }
+      { 77      ;3   ;Action    ;
+                      CaptionML=[DAN=&Reservationsposter;
+                                 ENU=&Reservation Entries];
+                      RunObject=Page 497;
+                      RunPageView=SORTING(Item No.,Variant Code,Location Code,Reservation Status);
+                      RunPageLink=Reservation Status=CONST(Reservation),
+                                  Item No.=FIELD(No.);
+                      Image=ReservationLedger }
+      { 5800    ;3   ;Action    ;
+                      CaptionML=[DAN=V&ërdiposter;
+                                 ENU=&Value Entries];
+                      RunObject=Page 5802;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=ValueLedger }
+      { 6500    ;3   ;Action    ;
+                      CaptionML=[DAN=Vare&sporingsposter;
+                                 ENU=Item &Tracking Entries];
+                      Image=ItemTrackingLedger;
+                      OnAction=VAR
+                                 ItemTrackingDocMgt@1000 : Codeunit 6503;
+                               BEGIN
+                                 ItemTrackingDocMgt.ShowItemTrackingForMasterData(3,'',"No.",'','','','');
+                               END;
+                                }
+      { 7       ;3   ;Action    ;
+                      CaptionML=[DAN=&Lagerposter;
+                                 ENU=&Warehouse Entries];
+                      RunObject=Page 7318;
+                      RunPageView=SORTING(Item No.,Bin Code,Location Code,Variant Code,Unit of Measure Code,Lot No.,Serial No.,Entry Type,Dedicated);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=BinLedger }
+      { 85      ;2   ;ActionGroup;
+                      CaptionML=[DAN=Statistik;
+                                 ENU=Statistics];
+                      Image=Statistics }
+      { 16      ;3   ;Action    ;
+                      ShortCutKey=F7;
+                      CaptionML=[DAN=Statistik;
+                                 ENU=Statistics];
+                      Image=Statistics;
+                      OnAction=VAR
+                                 ItemStatistics@1001 : Page 5827;
+                               BEGIN
+                                 ItemStatistics.SetItem(Rec);
+                                 ItemStatistics.RUNMODAL;
+                               END;
+                                }
+      { 17      ;3   ;Action    ;
+                      CaptionML=[DAN=Poststatistik;
+                                 ENU=Entry Statistics];
+                      RunObject=Page 304;
+                      RunPageLink=No.=FIELD(No.),
+                                  Date Filter=FIELD(Date Filter),
+                                  Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                                  Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter),
+                                  Location Filter=FIELD(Location Filter),
+                                  Drop Shipment Filter=FIELD(Drop Shipment Filter),
+                                  Variant Filter=FIELD(Variant Filter);
+                      Image=EntryStatistics }
+      { 22      ;3   ;Action    ;
+                      CaptionML=[DAN=&Terminsoversigt;
+                                 ENU=T&urnover];
+                      RunObject=Page 158;
+                      RunPageLink=No.=FIELD(No.),
+                                  Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                                  Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter),
+                                  Location Filter=FIELD(Location Filter),
+                                  Drop Shipment Filter=FIELD(Drop Shipment Filter),
+                                  Variant Filter=FIELD(Variant Filter);
+                      Image=Turnover }
+      { 15      ;2   ;Action    ;
+                      CaptionML=[DAN=Bem&ërkninger;
+                                 ENU=Co&mments];
+                      RunObject=Page 124;
+                      RunPageLink=Table Name=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=ViewComments }
+      { 33      ;1   ;ActionGroup;
+                      CaptionML=[DAN=&Salg;
+                                 ENU=S&ales];
+                      Image=Sales }
+      { 36      ;2   ;Action    ;
+                      Name=Sales_Prices;
+                      CaptionML=[DAN=Salgspriser;
+                                 ENU=Prices];
+                      RunObject=Page 7002;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=Price }
+      { 34      ;2   ;Action    ;
+                      Name=Sales_LineDiscounts;
+                      CaptionML=[DAN=Linjerabat;
+                                 ENU=Line Discounts];
+                      RunObject=Page 7004;
+                      RunPageView=SORTING(Type,Code);
+                      RunPageLink=Type=CONST(Item),
+                                  Code=FIELD(No.);
+                      Image=LineDiscount }
+      { 124     ;2   ;Action    ;
+                      CaptionML=[DAN=Forudb&etalingsprocenter;
+                                 ENU=Prepa&yment Percentages];
+                      RunObject=Page 664;
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=PrepaymentPercentages }
+      { 37      ;2   ;Action    ;
+                      CaptionML=[DAN=Ordrer;
+                                 ENU=Orders];
+                      RunObject=Page 48;
+                      RunPageView=SORTING(Document Type,Type,No.);
+                      RunPageLink=Type=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=Document }
+      { 114     ;2   ;Action    ;
+                      CaptionML=[DAN=Returvareordrer;
+                                 ENU=Returns Orders];
+                      RunObject=Page 6633;
+                      RunPageView=SORTING(Document Type,Type,No.);
+                      RunPageLink=Type=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=ReturnOrder }
+      { 38      ;1   ;ActionGroup;
+                      CaptionML=[DAN=Kõ&b;
+                                 ENU=&Purchases];
+                      Image=Purchasing }
+      { 118     ;2   ;Action    ;
+                      CaptionML=[DAN=&Kreditorer;
+                                 ENU=Ven&dors];
+                      RunObject=Page 114;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=Vendor }
+      { 39      ;2   ;Action    ;
+                      CaptionML=[DAN=Kõbspriser;
+                                 ENU=Prices];
+                      RunObject=Page 7012;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=Price }
+      { 42      ;2   ;Action    ;
+                      CaptionML=[DAN=Linjerabat;
+                                 ENU=Line Discounts];
+                      RunObject=Page 7014;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=LineDiscount }
+      { 125     ;2   ;Action    ;
+                      CaptionML=[DAN=Forudb&etalingsprocenter;
+                                 ENU=Prepa&yment Percentages];
+                      RunObject=Page 665;
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=PrepaymentPercentages }
+      { 40      ;2   ;Action    ;
+                      CaptionML=[DAN=Ordrer;
+                                 ENU=Orders];
+                      ApplicationArea=#Suite;
+                      RunObject=Page 56;
+                      RunPageView=SORTING(Document Type,Type,No.);
+                      RunPageLink=Type=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=Document }
+      { 115     ;2   ;Action    ;
+                      CaptionML=[DAN=Returvareordrer;
+                                 ENU=Return Orders];
+                      RunObject=Page 6643;
+                      RunPageView=SORTING(Document Type,Type,No.);
+                      RunPageLink=Type=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=ReturnOrder }
+      { 76      ;2   ;Action    ;
+                      CaptionML=[DAN=Katalo&gvarer;
+                                 ENU=Nonstoc&k Items];
+                      ApplicationArea=#Basic,#Suite;
+                      RunObject=Page 5726;
+                      Image=NonStockItem }
+      { 58      ;1   ;ActionGroup;
+                      CaptionML=[DAN=Lagersted;
+                                 ENU=Warehouse];
+                      Image=Warehouse }
+      { 116     ;2   ;Action    ;
+                      CaptionML=[DAN=Placeringsin&dhold;
+                                 ENU=&Bin Contents];
+                      RunObject=Page 7379;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=BinContent }
+      { 81      ;2   ;Action    ;
+                      CaptionML=[DAN=&Lagervare (pr. lokation);
+                                 ENU=Stockkeepin&g Units];
+                      RunObject=Page 5701;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=SKU }
+      { 60      ;1   ;ActionGroup;
+                      CaptionML=[DAN=Service;
+                                 ENU=Service];
+                      Image=ServiceItem }
+      { 103     ;2   ;Action    ;
+                      CaptionML=[DAN=Servi&ceartikler;
+                                 ENU=Ser&vice Items];
+                      RunObject=Page 5988;
+                      RunPageView=SORTING(Item No.);
+                      RunPageLink=Item No.=FIELD(No.);
+                      Image=ServiceItem }
+      { 11      ;2   ;Action    ;
+                      AccessByPermission=TableData 5900=R;
+                      CaptionML=[DAN=Fejlfinding;
+                                 ENU=Troubleshooting];
+                      Image=Troubleshoot;
+                      OnAction=VAR
+                                 TroubleshootingHeader@1000 : Record 5943;
+                               BEGIN
+                                 TroubleshootingHeader.ShowForItem(Rec);
+                               END;
+                                }
+      { 105     ;2   ;Action    ;
+                      CaptionML=[DAN=Opsëtning af fejlfinding;
+                                 ENU=Troubleshooting Setup];
+                      RunObject=Page 5993;
+                      RunPageLink=Type=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=Troubleshoot }
+      { 62      ;1   ;ActionGroup;
+                      CaptionML=[DAN=Ressourcer;
+                                 ENU=Resources];
+                      Image=Resource }
+      { 107     ;2   ;ActionGroup;
+                      CaptionML=[DAN=R&essource;
+                                 ENU=R&esource];
+                      Image=Resource }
+      { 108     ;3   ;Action    ;
+                      CaptionML=[DAN=Ressource&kvalifikationer;
+                                 ENU=Resource &Skills];
+                      ToolTipML=[DAN=Vis tildelingen af kvalifikationer til ressourcer, varer, serviceartikelgrupper og serviceartikler. Du kan bruge kvalifikationskoderne til at allokere kvalificerede ressourcer til serviceartikler eller varer, hvor der ved reparation krëves specialviden.;
+                                 ENU=View the assignment of skills to resources, items, service item groups, and service items. You can use skill codes to allocate skilled resources to service items or items that need special skills for servicing.];
+                      ApplicationArea=#Jobs;
+                      RunObject=Page 6019;
+                      RunPageLink=Type=CONST(Item),
+                                  No.=FIELD(No.);
+                      Image=ResourceSkills }
+      { 109     ;3   ;Action    ;
+                      AccessByPermission=TableData 5900=R;
+                      CaptionML=[DAN=Kval. r&essourcer;
+                                 ENU=Skilled R&esources];
+                      ToolTipML=[DAN=Vis en liste over alle registrerede ressourcer med oplysninger om, hvorvidt de har de nõdvendige kvalifikationer til at reparere den aktuelle serviceartikelgruppe, vare eller serviceartikel.;
+                                 ENU=View a list of all registered resources with information about whether they have the skills required to service the particular service item group, item, or service item.];
+                      ApplicationArea=#Jobs;
+                      Image=ResourceSkills;
+                      OnAction=VAR
+                                 ResourceSkill@1001 : Record 5956;
+                               BEGIN
+                                 CLEAR(SkilledResourceList);
+                                 SkilledResourceList.Initialize(ResourceSkill.Type::Item,"No.",Description);
+                                 SkilledResourceList.RUNMODAL;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 1   ;1   ;Group     ;
+                CaptionML=[DAN=Vare;
+                           ENU=Item];
+                GroupType=Repeater }
+
+    { 2   ;2   ;Field     ;
+                ToolTipML=[DAN=Angiver nummeret pÜ varen.;
+                           ENU=Specifies the number of the item.];
+                ApplicationArea=#All;
+                SourceExpr="No." }
+
+    { 4   ;2   ;Field     ;
+                ToolTipML=[DAN=Angiver en beskrivelse af varen.;
+                           ENU=Specifies a description of the item.];
+                ApplicationArea=#All;
+                SourceExpr=Description }
+
+    { 106 ;2   ;Field     ;
+                ToolTipML=[DAN=Angiver, om varekortet reprësenterer en fysisk vare (Lagerbeholdning) eller en service (Service).;
+                           ENU=Specifies if the item card represents a physical item (Inventory) or a service (Service).];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr=Type }
+
+    { 113 ;2   ;Field     ;
+                ToolTipML=[DAN=Angiver, hvor mange enheder af varen, f.eks. stk., ësker eller dÜser, der er pÜ lager.;
+                           ENU=Specifies how many units, such as pieces, boxes, or cans, of the item are in inventory.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr=Inventory;
+                HideValue=IsService }
+
+    { 95  ;2   ;Field     ;
+                SourceExpr="Created From Nonstock Item";
+                Visible=FALSE }
+
+    { 97  ;2   ;Field     ;
+                ToolTipML=[DAN=Angiver, at der findes en erstatning for denne vare.;
+                           ENU=Specifies that a substitute exists for this item.];
+                ApplicationArea=#Suite;
+                SourceExpr="Substitutes Exist" }
+
+    { 112 ;2   ;Field     ;
+                SourceExpr="Stockkeeping Unit Exists";
+                Visible=FALSE }
+
+    { 8   ;2   ;Field     ;
+                SourceExpr="Assembly BOM" }
+
+    { 99  ;2   ;Field     ;
+                Name=[ ];
+                SourceExpr="Production BOM No." }
+
+    { 101 ;2   ;Field     ;
+                SourceExpr="Routing No." }
+
+    { 6   ;2   ;Field     ;
+                ToolTipML=[DAN=Angiver den enhed, som varen opbevares i pÜ lageret.;
+                           ENU=Specifies the unit in which the item is held in inventory.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Base Unit of Measure" }
+
+    { 43  ;2   ;Field     ;
+                SourceExpr="Shelf No.";
+                Visible=FALSE }
+
+    { 45  ;2   ;Field     ;
+                SourceExpr="Costing Method";
+                Visible=FALSE }
+
+    { 122 ;2   ;Field     ;
+                SourceExpr="Cost is Adjusted" }
+
+    { 51  ;2   ;Field     ;
+                SourceExpr="Standard Cost";
+                Visible=FALSE }
+
+    { 53  ;2   ;Field     ;
+                ToolTipML=[DAN=Angiver kostprisen pr. vareenhed.;
+                           ENU=Specifies the cost per unit of the item.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Unit Cost" }
+
+    { 55  ;2   ;Field     ;
+                SourceExpr="Last Direct Cost";
+                Visible=FALSE }
+
+    { 57  ;2   ;Field     ;
+                SourceExpr="Price/Profit Calculation";
+                Visible=FALSE }
+
+    { 59  ;2   ;Field     ;
+                SourceExpr="Profit %";
+                Visible=FALSE }
+
+    { 61  ;2   ;Field     ;
+                ToolTipML=[DAN=Angiver prisen i RV for en enhed af varen.;
+                           ENU=Specifies the price for one unit of the item, in LCY.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Unit Price" }
+
+    { 63  ;2   ;Field     ;
+                SourceExpr="Inventory Posting Group";
+                Visible=FALSE }
+
+    { 12  ;2   ;Field     ;
+                SourceExpr="Gen. Prod. Posting Group";
+                Visible=FALSE }
+
+    { 74  ;2   ;Field     ;
+                SourceExpr="VAT Prod. Posting Group";
+                Visible=FALSE }
+
+    { 35  ;2   ;Field     ;
+                SourceExpr="Item Disc. Group";
+                Visible=FALSE }
+
+    { 65  ;2   ;Field     ;
+                SourceExpr="Vendor No." }
+
+    { 67  ;2   ;Field     ;
+                SourceExpr="Vendor Item No.";
+                Visible=FALSE }
+
+    { 69  ;2   ;Field     ;
+                ToolTipML=[DAN=Angiver en kode for varens brugstarifnummer.;
+                           ENU=Specifies a code for the item's tariff number.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Tariff No.";
+                Visible=FALSE }
+
+    { 71  ;2   ;Field     ;
+                SourceExpr="Search Description" }
+
+    { 91  ;2   ;Field     ;
+                SourceExpr="Overhead Rate";
+                Visible=FALSE }
+
+    { 89  ;2   ;Field     ;
+                SourceExpr="Indirect Cost %";
+                Visible=FALSE }
+
+    { 1102601000;2;Field  ;
+                SourceExpr="Item Category Code";
+                Visible=FALSE }
+
+    { 1102601002;2;Field  ;
+                SourceExpr="Product Group Code";
+                Visible=FALSE }
+
+    { 1102601004;2;Field  ;
+                SourceExpr=Blocked;
+                Visible=FALSE }
+
+    { 1102601006;2;Field  ;
+                SourceExpr="Last Date Modified";
+                Visible=FALSE }
+
+    { 1102601010;2;Field  ;
+                SourceExpr="Sales Unit of Measure";
+                Visible=FALSE }
+
+    { 1102601012;2;Field  ;
+                SourceExpr="Replenishment System";
+                Visible=FALSE }
+
+    { 1102601016;2;Field  ;
+                SourceExpr="Purch. Unit of Measure";
+                Visible=FALSE }
+
+    { 1102601018;2;Field  ;
+                SourceExpr="Lead Time Calculation";
+                Visible=FALSE }
+
+    { 1102601020;2;Field  ;
+                SourceExpr="Manufacturing Policy";
+                Visible=FALSE }
+
+    { 1102601024;2;Field  ;
+                SourceExpr="Flushing Method";
+                Visible=FALSE }
+
+    { 9   ;2   ;Field     ;
+                SourceExpr="Assembly Policy";
+                Visible=FALSE }
+
+    { 1102601026;2;Field  ;
+                SourceExpr="Item Tracking Code";
+                Visible=FALSE }
+
+    { 31  ;2   ;Field     ;
+                CaptionML=[DAN=Standardperiodiseringsskabelon;
+                           ENU=Default Deferral Template];
+                ToolTipML=[DAN=Angiver den standardskabelon, der styrer, hvordan indtjening og udgifter skal periodiseres til perioderne, nÜr de indtrëffer.;
+                           ENU=Specifies the default template that governs how to defer revenues and expenses to the periods when they occurred.];
+                ApplicationArea=#Suite;
+                SourceExpr="Default Deferral Template Code";
+                Importance=Additional }
+
+    { 1900000007;0;Container;
+                ContainerType=FactBoxArea }
+
+    { 3   ;1   ;Part      ;
+                ApplicationArea=#All;
+                SubPageLink=Source Type=CONST(Item),
+                            Source No.=FIELD(No.);
+                PagePartID=Page875;
+                Visible=SocialListeningVisible;
+                PartType=Page }
+
+    { 26  ;1   ;Part      ;
+                ApplicationArea=#All;
+                SubPageLink=Source Type=CONST(Item),
+                            Source No.=FIELD(No.);
+                PagePartID=Page876;
+                Visible=SocialListeningSetupVisible;
+                PartType=Page;
+                UpdatePropagation=Both }
+
+    { 1901314507;1;Part   ;
+                SubPageLink=No.=FIELD(No.),
+                            Date Filter=FIELD(Date Filter),
+                            Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                            Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter),
+                            Location Filter=FIELD(Location Filter),
+                            Drop Shipment Filter=FIELD(Drop Shipment Filter),
+                            Bin Filter=FIELD(Bin Filter),
+                            Variant Filter=FIELD(Variant Filter),
+                            Lot No. Filter=FIELD(Lot No. Filter),
+                            Serial No. Filter=FIELD(Serial No. Filter);
+                PagePartID=Page9089;
+                PartType=Page }
+
+    { 1903326807;1;Part   ;
+                SubPageLink=No.=FIELD(No.),
+                            Date Filter=FIELD(Date Filter),
+                            Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                            Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter),
+                            Location Filter=FIELD(Location Filter),
+                            Drop Shipment Filter=FIELD(Drop Shipment Filter),
+                            Bin Filter=FIELD(Bin Filter),
+                            Variant Filter=FIELD(Variant Filter),
+                            Lot No. Filter=FIELD(Lot No. Filter),
+                            Serial No. Filter=FIELD(Serial No. Filter);
+                PagePartID=Page9090;
+                Visible=FALSE;
+                PartType=Page }
+
+    { 1906840407;1;Part   ;
+                SubPageLink=No.=FIELD(No.),
+                            Date Filter=FIELD(Date Filter),
+                            Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                            Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter),
+                            Location Filter=FIELD(Location Filter),
+                            Drop Shipment Filter=FIELD(Drop Shipment Filter),
+                            Bin Filter=FIELD(Bin Filter),
+                            Variant Filter=FIELD(Variant Filter),
+                            Lot No. Filter=FIELD(Lot No. Filter),
+                            Serial No. Filter=FIELD(Serial No. Filter);
+                PagePartID=Page9091;
+                PartType=Page }
+
+    { 1901796907;1;Part   ;
+                SubPageLink=No.=FIELD(No.),
+                            Date Filter=FIELD(Date Filter),
+                            Global Dimension 1 Filter=FIELD(Global Dimension 1 Filter),
+                            Global Dimension 2 Filter=FIELD(Global Dimension 2 Filter),
+                            Location Filter=FIELD(Location Filter),
+                            Drop Shipment Filter=FIELD(Drop Shipment Filter),
+                            Bin Filter=FIELD(Bin Filter),
+                            Variant Filter=FIELD(Variant Filter),
+                            Lot No. Filter=FIELD(Lot No. Filter),
+                            Serial No. Filter=FIELD(Serial No. Filter);
+                PagePartID=Page9109;
+                Visible=FALSE;
+                PartType=Page }
+
+    { 136 ;1   ;Part      ;
+                Name=ItemAttributesFactBox;
+                ApplicationArea=#Basic,#Suite;
+                PagePartID=Page9110;
+                PartType=Page }
+
+    { 1900383207;1;Part   ;
+                PartType=System;
+                SystemPartID=RecordLinks }
+
+    { 1905767507;1;Part   ;
+                PartType=System;
+                SystemPartID=Notes }
+
+  }
+  CODE
+  {
+    VAR
+      TempFilterItemAttributesBuffer@1014 : TEMPORARY Record 7506;
+      ApplicationAreaSetup@1015 : Record 9178;
+      CalculateStdCost@1005 : Codeunit 5812;
+      ItemAvailFormsMgt@1000 : Codeunit 353;
+      ApprovalsMgmt@1008 : Codeunit 1535;
+      SkilledResourceList@1001 : Page 6023;
+      IsFoundationEnabled@1016 : Boolean;
+      SocialListeningSetupVisible@1003 : Boolean INDATASET;
+      SocialListeningVisible@1002 : Boolean INDATASET;
+      CRMIntegrationEnabled@1006 : Boolean;
+      CRMIsCoupledToRecord@1004 : Boolean;
+      OpenApprovalEntriesExist@1007 : Boolean;
+      IsService@1009 : Boolean INDATASET;
+      InventoryItemEditable@1010 : Boolean INDATASET;
+      EnabledApprovalWorkflowsExist@1011 : Boolean;
+      CanCancelApprovalForRecord@1013 : Boolean;
+      EventFilter@1012 : Text;
+
+    PROCEDURE GetSelectionFilter@3() : Text;
+    VAR
+      Item@1001 : Record 27;
+      SelectionFilterManagement@1002 : Codeunit 46;
+    BEGIN
+      CurrPage.SETSELECTIONFILTER(Item);
+      EXIT(SelectionFilterManagement.GetSelectionFilterForItem(Item));
+    END;
+
+    PROCEDURE SetSelection@1(VAR Item@1000 : Record 27);
+    BEGIN
+      CurrPage.SETSELECTIONFILTER(Item);
+    END;
+
+    LOCAL PROCEDURE SetSocialListeningFactboxVisibility@2();
+    VAR
+      SocialListeningMgt@1000 : Codeunit 871;
+    BEGIN
+      SocialListeningMgt.GetItemFactboxVisibility(Rec,SocialListeningSetupVisible,SocialListeningVisible);
+    END;
+
+    LOCAL PROCEDURE EnableControls@4();
+    BEGIN
+      IsService := (Type = Type::Service);
+      InventoryItemEditable := Type = Type::Inventory;
+    END;
+
+    LOCAL PROCEDURE SetWorkflowManagementEnabledState@9();
+    VAR
+      WorkflowManagement@1001 : Codeunit 1501;
+      WorkflowEventHandling@1000 : Codeunit 1520;
+    BEGIN
+      EventFilter := WorkflowEventHandling.RunWorkflowOnSendItemForApprovalCode + '|' +
+        WorkflowEventHandling.RunWorkflowOnItemChangedCode;
+
+      EnabledApprovalWorkflowsExist := WorkflowManagement.EnabledWorkflowExist(DATABASE::Item,EventFilter);
+    END;
+
+    BEGIN
+    END.
+  }
+}
+
+OBJECT Page 119 User Setup
+{
+  OBJECT-PROPERTIES
+  {
+    Date=25-08-17;
+    Time=09:26:46;
+    Modified=Yes;
+    Version List=NAVW110.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DAN=Brugeropsëtning;
+               ENU=User Setup];
+    SourceTable=Table91;
+    PageType=List;
+    OnOpenPage=BEGIN
+                 HideExternalUsers;
+               END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000000;  ;ActionContainer;
+                      Name=Printer Permission;
+                      ActionContainerType=NewDocumentItems }
+      { 1000000001;1 ;Action    ;
+                      Name=Open Permission Page;
+                      OnAction=VAR
+                                 UserSetup@1000000000 : Record 91;
+                                 PermissionsPage@1000000001 : Page 50002;
+                                 PrinterPermissionRec@1000000002 : Record 50002;
+                               BEGIN
+                                 CurrPage.SETSELECTIONFILTER(UserSetup);
+                                 IF UserSetup.COUNT < 2 THEN BEGIN
+                                   IF UserSetup.COUNT <> 0 THEN BEGIN
+                                    UserSetup.FINDSET;
+                                      CLEAR(PermissionsPage);
+                                    MESSAGE(FORMAT(UserSetup."User ID"));
+                                     PrinterPermissionRec.SETFILTER("User ID", '=%1',UserSetup."User ID");
+                                     PermissionsPage.SETTABLEVIEW(PrinterPermissionRec);
+                                     PermissionsPage.RUNMODAL();
+                                   END ELSE BEGIN
+                                     MESSAGE('You must select a user to setup printer permissions.');
+                                   END
+                                  END ELSE BEGIN
+                                   MESSAGE('You cannot change permissions for more than one user at a time.');
+                                 END;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 1   ;1   ;Group     ;
+                GroupType=Repeater }
+
+    { 2   ;2   ;Field     ;
+                ToolTipML=[DAN=Angiver et bruger-id.;
+                           ENU=Specifies a user ID.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="User ID" }
+
+    { 4   ;2   ;Field     ;
+                ToolTipML=[DAN=Angiver den tidligste dato, hvor brugeren mÜ bogfõre i regnskabet.;
+                           ENU=Specifies the earliest date on which the user is allowed to post to the company.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Allow Posting From" }
+
+    { 6   ;2   ;Field     ;
+                ToolTipML=[DAN=Angiver den seneste dato, hvor brugeren mÜ bogfõre i regnskabet.;
+                           ENU=Specifies the last date on which the user is allowed to post to the company.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Allow Posting To" }
+
+    { 8   ;2   ;Field     ;
+                ToolTipML=[DAN=Angiver, om brugerens tidsforbrug, der er defineret som tidsforbrug fra, nÜr brugeren logger pÜ, til nÜr brugeren logger af, skal registreres.;
+                           ENU=Specifies whether to register the user's time usage defined as the time spent from when the user logs in to when the user logs out.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Register Time" }
+
+    { 15  ;2   ;Field     ;
+                ToolTipML=[DAN=Angiver koden for det ansvarscenter, som brugeren skal tilknyttes.;
+                           ENU=Specifies the code for the responsibility center to which you want to assign the user.];
+                SourceExpr="Sales Resp. Ctr. Filter" }
+
+    { 17  ;2   ;Field     ;
+                ToolTipML=[DAN=Angiver koden for det ansvarscenter, som brugeren skal tilknyttes.;
+                           ENU=Specifies the code for the responsibility center to which you want to assign the user.];
+                SourceExpr="Purchase Resp. Ctr. Filter" }
+
+    { 21  ;2   ;Field     ;
+                ToolTipML=[DAN=Angiver koden for det ansvarscenter, du vil knytte brugeren til. Brugeren fÜr kun vist servicedokumenter for det ansvarscenter, der er angivet i feltet. Dette ansvarscenter er ogsÜ standardansvarscenteret, nÜr brugeren opretter nye servicedokumenter.;
+                           ENU=Specifies the code for the responsibility center you want to assign to the user. The user will only be able to see service documents for the responsibility center specified in the field. This responsibility center will also be the default responsibility center when the user creates new service documents.];
+                SourceExpr="Service Resp. Ctr. Filter" }
+
+    { 3   ;2   ;Field     ;
+                ToolTipML=[DAN=Angiver, om en bruger er timeseddeladministrator. En timeseddeladministrator kan fÜ adgang til enhver timeseddel og derefter redigere, ëndre eller slette den.;
+                           ENU=Specifies if a user is a time sheet administrator. A time sheet administrator can access any time sheet and then edit, change, or delete it.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr="Time Sheet Admin." }
+
+    { 1900000007;0;Container;
+                ContainerType=FactBoxArea }
+
+    { 1900383207;1;Part   ;
+                Visible=FALSE;
+                PartType=System;
+                SystemPartID=RecordLinks }
+
+    { 1905767507;1;Part   ;
+                Visible=FALSE;
+                PartType=System;
+                SystemPartID=Notes }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+
+OBJECT Page 346 Item Picture
+{
+  OBJECT-PROPERTIES
+  {
+    Date=29-08-17;
+    Time=13:56:35;
+    Modified=Yes;
+    Version List=NAVW110.00;
+  }
+  PROPERTIES
+  {
+    CaptionML=[DAN=Varebillede;
+               ENU=Item Picture];
+    InsertAllowed=No;
+    DeleteAllowed=No;
+    LinksAllowed=No;
+    SourceTable=Table27;
+    PageType=CardPart;
+    OnOpenPage=BEGIN
+                 CameraAvailable := CameraProvider.IsAvailable;
+                 IF CameraAvailable THEN
+                   CameraProvider := CameraProvider.Create;
+               END;
+
+    OnAfterGetCurrRecord=BEGIN
+                           SetEditableOnPictureActions;
+                         END;
+
+    ActionList=ACTIONS
+    {
+      { 2       ;    ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 3       ;1   ;Action    ;
+                      Name=TakePicture;
+                      CaptionML=[DAN=Tag;
+                                 ENU=Take];
+                      ToolTipML=[DAN=AktivÇr kameraet pÜ enheden.;
+                                 ENU=Activate the camera on the device.];
+                      ApplicationArea=#All;
+                      Promoted=Yes;
+                      Visible=CameraAvailable;
+                      PromotedIsBig=Yes;
+                      Image=Camera;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 CameraOptions@1000 : DotNet "'Microsoft.Dynamics.Nav.ClientExtensions, Version=10.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'.Microsoft.Dynamics.Nav.Client.Capabilities.CameraOptions";
+                               BEGIN
+                                 IF NOT CameraAvailable THEN
+                                   EXIT;
+                                 CameraOptions := CameraOptions.CameraOptions;
+                                 CameraOptions.Quality := 100;
+                                 CameraProvider.RequestPictureAsync(CameraOptions);
+                               END;
+                                }
+      { 4       ;1   ;Action    ;
+                      Name=ImportPicture;
+                      CaptionML=[DAN=Indlës;
+                                 ENU=Import];
+                      ToolTipML=[DAN=ImportÇr en billedfil.;
+                                 ENU=Import a picture file.];
+                      ApplicationArea=#All;
+                      Image=Import;
+                      OnAction=VAR
+                                 FileManagement@1001 : Codeunit 419;
+                                 FileName@1000 : Text;
+                                 ClientFileName@1002 : Text;
+                               BEGIN
+                                 IF Picture.COUNT > 0 THEN
+                                   IF NOT CONFIRM(OverrideImageQst) THEN
+                                     EXIT;
+
+                                 FileName := FileManagement.UploadFile(SelectPictureTxt,ClientFileName);
+                                 IF FileName = '' THEN
+                                   EXIT;
+
+                                 CLEAR(Picture);
+                                 Picture.IMPORTFILE(FileName,ClientFileName);
+                                 MODIFY(TRUE);
+                                 IF FileManagement.DeleteServerFile(FileName) THEN;
+                               END;
+                                }
+      { 6       ;1   ;Action    ;
+                      Name=ExportFile;
+                      CaptionML=[DAN=Udlës;
+                                 ENU=Export];
+                      ToolTipML=[DAN=EksportÇr billedet til en fil.;
+                                 ENU=Export the picture to a file.];
+                      ApplicationArea=#All;
+                      Enabled=DeleteExportEnabled;
+                      Image=Export;
+                      OnAction=VAR
+                                 NameValueBuffer@1002 : Record 823;
+                                 TempNameValueBuffer@1004 : TEMPORARY Record 823;
+                                 FileManagement@1001 : Codeunit 419;
+                                 ToFile@1003 : Text;
+                                 ExportPath@1005 : Text;
+                               BEGIN
+                                 NameValueBuffer.DELETEALL;
+                                 ExportPath := TEMPORARYPATH + "No." + FORMAT(Picture.MEDIAID);
+                                 Picture.EXPORTFILE(ExportPath);
+                                 FileManagement.GetServerDirectoryFilesList(TempNameValueBuffer,TEMPORARYPATH);
+                                 TempNameValueBuffer.SETFILTER(Name,STRSUBSTNO('%1*',ExportPath));
+                                 TempNameValueBuffer.FINDFIRST;
+                                 ToFile := STRSUBSTNO('%1 %2.jpg',"No.",Description);
+                                 DOWNLOAD(TempNameValueBuffer.Name,DownloadImageTxt,'','',ToFile);
+                                 IF FileManagement.DeleteServerFile(TempNameValueBuffer.Name) THEN;
+                               END;
+                                }
+      { 7       ;1   ;Action    ;
+                      Name=DeletePicture;
+                      CaptionML=[DAN=Slet;
+                                 ENU=Delete];
+                      ToolTipML=[DAN=Slet recorden.;
+                                 ENU=Delete the record.];
+                      ApplicationArea=#All;
+                      Enabled=DeleteExportEnabled;
+                      Image=Delete;
+                      OnAction=BEGIN
+                                 IF NOT CONFIRM(DeleteImageQst) THEN
+                                   EXIT;
+
+                                 CLEAR(Picture);
+                                 MODIFY(TRUE);
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 1   ;1   ;Field     ;
+                Name=<Pictures>;
+                CaptionML=[DAN=Billede;
+                           ENU=<Pictures>];
+                ToolTipML=[DAN=Angiver det billede, der er blevet indsat for varen.;
+                           ENU=Specifies the picture that has been inserted for the item.];
+                ApplicationArea=#Basic,#Suite;
+                SourceExpr=Picture;
+                ShowCaption=No }
+
+  }
+  CODE
+  {
+    VAR
+      CameraProvider@1000 : DotNet "'Microsoft.Dynamics.Nav.ClientExtensions, Version=10.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35'.Microsoft.Dynamics.Nav.Client.Capabilities.CameraProvider" WITHEVENTS RUNONCLIENT;
+      CameraAvailable@1002 : Boolean;
+      OverrideImageQst@1007 : TextConst 'DAN=Det eksisterende billede erstattes. Vil du fortsëtte?;ENU=The existing picture will be replaced. Do you want to continue?';
+      DeleteImageQst@1003 : TextConst 'DAN=Er du sikker pÜ, at billedet skal slettes?;ENU=Are you sure you want to delete the picture?';
+      SelectPictureTxt@1001 : TextConst 'DAN=Vëlg et billede til overfõrsel;ENU=Select a picture to upload';
+      DeleteExportEnabled@1005 : Boolean;
+      DownloadImageTxt@1006 : TextConst 'DAN=Hent billede;ENU=Download image';
+
+    LOCAL PROCEDURE SetEditableOnPictureActions@1();
+    BEGIN
+      DeleteExportEnabled := Picture.COUNT <> 0;
+    END;
+
+    EVENT CameraProvider@1000::PictureAvailable@10(PictureName@1001 : Text;PictureFilePath@1000 : Text);
+    VAR
+      File@1003 : File;
+      Instream@1004 : InStream;
+    BEGIN
+      IF (PictureName = '') OR (PictureFilePath = '') THEN
+        EXIT;
+
+      IF Picture.COUNT > 0 THEN
+        IF NOT CONFIRM(OverrideImageQst) THEN BEGIN
+          IF ERASE(PictureFilePath) THEN;
+          EXIT;
+        END;
+
+      File.OPEN(PictureFilePath);
+      File.CREATEINSTREAM(Instream);
+
+      CLEAR(Picture);
+      Picture.IMPORTSTREAM(Instream,PictureName);
+      MODIFY(TRUE);
+
+      File.CLOSE;
+      IF ERASE(PictureFilePath) THEN;
+    END;
+
+    BEGIN
+    END.
+  }
+}
+
+OBJECT Page 50000 Label Printers
+{
+  OBJECT-PROPERTIES
+  {
+    Date=25-08-17;
+    Time=13:28:32;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table50000;
+    PageType=List;
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                SourceExpr=Name }
+
+    { 1000000003;2;Field  ;
+                SourceExpr=Description }
+
+    { 1000000004;2;Field  ;
+                SourceExpr=IP }
+
+    { 1000000005;2;Field  ;
+                Lookup=Yes;
+                DrillDown=Yes;
+                SourceExpr="Domain Path";
+                TableRelation="Printer Language Mapping";
+                LookupPageID=Printer specifications }
+
+    { 1000000006;2;Field  ;
+                Name=Printer Specifications;
+                SourceExpr=PrinterSpec.ID;
+                TableRelation="Printer Language Mapping".ID }
+
+    { 1000000007;2;Field  ;
+                SourceExpr=LabelWidth }
+
+    { 1000000008;2;Field  ;
+                SourceExpr=LabelHeight }
+
+    { 1000000009;2;Field  ;
+                CaptionML=ENU=<Dots Per mm>;
+                SourceExpr=DPI }
+
+    { 1000000011;2;Field  ;
+                SourceExpr="In Use" }
+
+    { 1000000010;2;Field  ;
+                SourceExpr=SetupDate }
+
+  }
+  CODE
+  {
+    VAR
+      PrinterSpec@1000000000 : Record 50001;
+
+    BEGIN
+    END.
+  }
+}
+
+OBJECT Page 50001 Printer specifications
+{
+  OBJECT-PROPERTIES
+  {
+    Date=22-08-17;
+    Time=13:37:08;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table50001;
+    PageType=List;
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                SourceExpr=Brand }
+
+    { 1000000003;2;Field  ;
+                SourceExpr=Model }
+
+    { 1000000004;2;Field  ;
+                SourceExpr=Language }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+
+OBJECT Page 50002 Printer Permissions
+{
+  OBJECT-PROPERTIES
+  {
+    Date=25-08-17;
+    Time=09:46:23;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table50002;
+    PageType=List;
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                SourceExpr="Printer ID" }
+
+    { 1000000003;2;Field  ;
+                Name=User ID;
+                SourceExpr=User."User Name";
+                TableRelation=User."User Name" }
+
+  }
+  CODE
+  {
+    VAR
+      User@1000000000 : Record 2000000120;
+
+    BEGIN
+    END.
+  }
+}
+
+OBJECT Page 95478 Print Labels
+{
+  OBJECT-PROPERTIES
+  {
+    Date=31-08-17;
+    Time=15:34:20;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    Editable=Yes;
+    SaveValues=Yes;
+    SourceTable=Table27;
+    PageType=List;
+    OnOpenPage=VAR
+                 File@1000000000 : File;
+                 Instream@1000000001 : InStream;
+                 PictureRec@1000000002 : Record 95478;
+                 outstre@1000000003 : OutStream;
+                 text@1000000004 : Binary[2000];
+                 sdfghjk@1000000005 : BigText;
+               BEGIN
+                 CurrPage.LabelPrinterPicture.PAGE.Globalelite('');
+
+                 RowAdjustment := RowAdjustment.List;
+                 CASE FORMAT(ChooseRow) OF
+                   'Row1': LastRow := 1;
+                   'Row2' : LastRow := 2;
+                   'Row3': LastRow := 3;
+                   'All': LastRow := 4;
+                   END;
+                 RowX := 0;
+                 RowY := 0;
+                 Row1X := 0;
+                 Row1Y := 0;
+                 Row2X := 0;
+                 Row2Y := 0;
+                 Row3X := 0;
+                 Row3Y := 0;
+                 AllRowX := 0;
+                 AllRowY := 0;
+               END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000216;  ;ActionContainer;
+                      Name=Main;
+                      CaptionML=ENU=Main;
+                      ActionContainerType=ActionItems }
+      { 1000000221;1 ;ActionGroup;
+                      Name=Preview }
+      { 1000000217;2 ;Action    ;
+                      Name=View Preview As Picture;
+                      Image=Forecast;
+                      OnAction=VAR
+                                 temptext@1000000000 : Text[1024];
+                               BEGIN
+                                 temptext := CallCodeUnit(2);
+                                 CurrPage.LabelPrinterPicture.PAGE.Globalelite(temptext);
+                               END;
+                                }
+      { 1000000218;2 ;Action    ;
+                      Name=Load Preview In Page;
+                      OnAction=BEGIN
+                                 MESSAGE('kebab');
+                               END;
+                                }
+      { 1000000219;1 ;ActionGroup;
+                      Name=Print;
+                      ActionContainerType=NewDocumentItems }
+      { 1000000220;2 ;Action    ;
+                      Name=Print Items;
+                      OnAction=VAR
+                                 PictureRecord@1000000000 : Record 95478;
+                                 rand@1000000001 : Integer;
+                                 RetrievePictureRec@1000000002 : Record 95478;
+                               BEGIN
+                                 CallCodeUnit(1);
+                               END;
+                                }
+      { 1000000233;1 ;ActionGroup;
+                      Name=Import Files;
+                      ActionContainerType=NewDocumentItems }
+      { 1000000234;2 ;Action    ;
+                      Name=Import Picture;
+                      OnAction=BEGIN
+                                 LabelprinterFunctions.ImportPicture();
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000205;1;Group  ;
+                Name=Print Options;
+                GroupType=Group;
+                Layout=Columns }
+
+    { 1000000223;2;Group  ;
+                GroupType=GridLayout;
+                Layout=Columns }
+
+    { 1000000227;3;Group  ;
+                CaptionML=ENU=Choose options;
+                GroupType=Group }
+
+    { 1000000213;4;Field  ;
+                Name=Row 1;
+                CaptionML=ENU=Input for row one;
+                SourceExpr=DataTextOption;
+                Importance=Standard }
+
+    { 1000000212;4;Field  ;
+                Name=Row 2;
+                CaptionML=ENU=Input for row two;
+                SourceExpr=DataTextOption2 }
+
+    { 1000000211;4;Field  ;
+                Name=Row 3;
+                CaptionML=ENU=Input for row three;
+                SourceExpr=DataTextOption3 }
+
+    { 1000000210;4;Field  ;
+                Name=Prefix;
+                CaptionML=ENU=Include column name?;
+                SourceExpr=Prefix }
+
+    { 1000000206;4;Field  ;
+                Name=Printer;
+                NotBlank=Yes;
+                SourceExpr=Printer.ID;
+                MinValue=1;
+                MaxValue=90000;
+                TableRelation="Label Printers".ID WHERE (In Use=CONST(Yes));
+                MultiLine=Yes }
+
+    { 1000000214;4;Field  ;
+                Name=NumberOfCopies;
+                CaptionML=[DAN=Antal labels;
+                           DEU=Anzahl Etiketten;
+                           ENU=Number of copies];
+                SourceExpr=NumberOfCopies;
+                MinValue=1;
+                MaxValue=50;
+                MultiLine=Yes }
+
+    { 1000000228;3;Group  ;
+                Visible=FALSE;
+                GroupType=Group }
+
+    { 1000000230;4;Field  ;
+                Name=blank }
+
+    { 1000000215;3;Group  ;
+                GroupType=Group }
+
+    { 1000000209;4;Field  ;
+                Name=Type 1;
+                CaptionML=ENU=Type row 1;
+                SourceExpr=DataTypeOption }
+
+    { 1000000208;4;Field  ;
+                Name=Type 2;
+                CaptionML=ENU=Type row 2;
+                SourceExpr=DataTypeOption2 }
+
+    { 1000000207;4;Field  ;
+                Name=Type 3;
+                CaptionML=ENU=Type row 3;
+                SourceExpr=DataTypeOption3 }
+
+    { 1000000231;3;Group  ;
+                Visible=FALSE;
+                GroupType=Group }
+
+    { 1000000232;4;Field  ;
+                Name=blanc;
+                Visible=FALSE }
+
+    { 1000000229;3;Group  ;
+                GroupType=Group }
+
+    { 1000000224;4;Field  ;
+                Name=Row to modify;
+                SourceExpr=ChooseRow;
+                OnValidate=BEGIN
+                             CASE FORMAT(ChooseRow) OF
+                               'Row1':BEGIN
+                               CASE LastRow OF
+                                 2: BEGIN
+                                   Row2X := RowX;
+                                   Row2Y := RowY;
+                                   RowX := Row1X;
+                                   RowY := Row1Y;
+                                   END;
+                               3: BEGIN
+                                   Row3X := RowX;
+                                   Row3Y := RowY;
+                                   RowX := Row1X;
+                                   RowY := Row1Y;
+                                   END;
+                                 4: BEGIN
+                                   AllRowX := RowX;
+                                   AllRowY := RowY;
+                                   RowX := Row1X;
+                                   RowY := Row1Y;
+                                   END;
+
+                                 END;
+                                 LastRow := 1;
+                                 END;
+                                 'Row2' : BEGIN
+                                 CASE LastRow OF
+                                 1: BEGIN
+                                   Row1X := RowX;
+                                   Row1Y := RowY;
+                                   RowX := Row2X;
+                                   RowY := Row2Y;
+                                   END;
+                               3: BEGIN
+                                   Row3X := RowX;
+                                   Row3Y := RowY;
+                                   RowX := Row2X;
+                                   RowY := Row2Y;
+                                   END;
+                                 4: BEGIN
+                                   AllRowX := RowX;
+                                   AllRowY := RowY;
+                                   RowX := Row2X;
+                                   RowY := Row2Y;
+                                   END;
+                                 END;
+                                 LastRow := 2;
+                                 END;
+                                 'Row3':BEGIN
+                               CASE LastRow OF
+                                 1: BEGIN
+                                   Row1X := RowX;
+                                   Row1Y := RowY;
+                                   RowX := Row3X;
+                                   RowY := Row3Y;
+                                   END;
+                               2: BEGIN
+                                   Row2X := RowX;
+                                   Row2Y := RowY;
+                                   RowX := Row3X;
+                                   RowY := Row3Y;
+                                   END;
+                                 4: BEGIN
+                                   AllRowX := RowX;
+                                   AllRowY := RowY;
+                                   RowX := Row3X;
+                                   RowY := Row3Y;
+                                   END;
+                                 END;
+                                 LastRow := 3;
+                                 END;
+                                 'All':BEGIN
+                               CASE LastRow OF
+                                 1: BEGIN
+                                   Row1X := RowX;
+                                   Row1Y := RowY;
+                                   RowX := AllRowX;
+                                   RowY := AllRowY;
+                                   END;
+                               2: BEGIN
+                                   Row2X := RowX;
+                                   Row2Y := RowY;
+                                   RowX := AllRowX;
+                                   RowY := AllRowY;
+                                   END;
+                                 3: BEGIN
+                                   Row3X := RowX;
+                                   Row3Y := RowY;
+                                   RowX := AllRowX;
+                                   RowY := AllRowY;
+                                   END;
+                                 END;
+                                 LastRow := 4;
+                               END
+                               END;
+                           END;
+                            }
+
+    { 1000000225;4;Field  ;
+                Name=X Coordinates;
+                SourceExpr=RowX;
+                MultiLine=Yes;
+                OnValidate=BEGIN
+                             // ManageIndentOptions();
+                           END;
+                            }
+
+    { 1000000226;4;Field  ;
+                Name=Y Coordinates;
+                SourceExpr=RowY;
+                MultiLine=Yes;
+                OnValidate=BEGIN
+                             // ManageIndentOptions();
+                           END;
+                            }
+
+    { 1000000222;2;Part   ;
+                Name=LabelPrinterPicture;
+                PagePartID=Page95479;
+                PartType=Page;
+                UpdatePropagation=SubPart }
+
+    { 1000000001;1;Group  ;
+                Name=ItemList;
+                Visible=true;
+                Editable=FALSE;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                SourceExpr="No." }
+
+    { 1000000003;2;Field  ;
+                SourceExpr="No. 2" }
+
+    { 1000000004;2;Field  ;
+                SourceExpr=Description }
+
+    { 1000000005;2;Field  ;
+                SourceExpr="Search Description" }
+
+    { 1000000006;2;Field  ;
+                SourceExpr="Description 2" }
+
+    { 1000000007;2;Field  ;
+                SourceExpr="Assembly BOM" }
+
+    { 1000000008;2;Field  ;
+                SourceExpr="Base Unit of Measure" }
+
+    { 1000000009;2;Field  ;
+                SourceExpr="Price Unit Conversion" }
+
+    { 1000000010;2;Field  ;
+                SourceExpr=Type }
+
+    { 1000000011;2;Field  ;
+                SourceExpr="Inventory Posting Group" }
+
+    { 1000000012;2;Field  ;
+                SourceExpr="Shelf No." }
+
+    { 1000000013;2;Field  ;
+                SourceExpr="Item Disc. Group" }
+
+    { 1000000014;2;Field  ;
+                SourceExpr="Allow Invoice Disc." }
+
+    { 1000000015;2;Field  ;
+                SourceExpr="Statistics Group" }
+
+    { 1000000016;2;Field  ;
+                SourceExpr="Commission Group" }
+
+    { 1000000017;2;Field  ;
+                SourceExpr="Unit Price" }
+
+    { 1000000018;2;Field  ;
+                SourceExpr="Price/Profit Calculation" }
+
+    { 1000000019;2;Field  ;
+                SourceExpr="Profit %" }
+
+    { 1000000020;2;Field  ;
+                SourceExpr="Costing Method" }
+
+    { 1000000021;2;Field  ;
+                SourceExpr="Unit Cost" }
+
+    { 1000000022;2;Field  ;
+                SourceExpr="Standard Cost" }
+
+    { 1000000023;2;Field  ;
+                SourceExpr="Last Direct Cost" }
+
+    { 1000000024;2;Field  ;
+                SourceExpr="Indirect Cost %" }
+
+    { 1000000025;2;Field  ;
+                SourceExpr="Cost is Adjusted" }
+
+    { 1000000026;2;Field  ;
+                SourceExpr="Allow Online Adjustment" }
+
+    { 1000000027;2;Field  ;
+                SourceExpr="Vendor No." }
+
+    { 1000000028;2;Field  ;
+                SourceExpr="Vendor Item No." }
+
+    { 1000000029;2;Field  ;
+                SourceExpr="Lead Time Calculation" }
+
+    { 1000000030;2;Field  ;
+                SourceExpr="Reorder Point" }
+
+    { 1000000031;2;Field  ;
+                SourceExpr="Maximum Inventory" }
+
+    { 1000000032;2;Field  ;
+                SourceExpr="Reorder Quantity" }
+
+    { 1000000033;2;Field  ;
+                SourceExpr="Alternative Item No." }
+
+    { 1000000034;2;Field  ;
+                SourceExpr="Unit List Price" }
+
+    { 1000000035;2;Field  ;
+                SourceExpr="Duty Due %" }
+
+    { 1000000036;2;Field  ;
+                SourceExpr="Duty Code" }
+
+    { 1000000037;2;Field  ;
+                SourceExpr="Gross Weight" }
+
+    { 1000000038;2;Field  ;
+                SourceExpr="Net Weight" }
+
+    { 1000000039;2;Field  ;
+                SourceExpr="Units per Parcel" }
+
+    { 1000000040;2;Field  ;
+                SourceExpr="Unit Volume" }
+
+    { 1000000041;2;Field  ;
+                SourceExpr=Durability }
+
+    { 1000000042;2;Field  ;
+                SourceExpr="Freight Type" }
+
+    { 1000000043;2;Field  ;
+                SourceExpr="Tariff No." }
+
+    { 1000000044;2;Field  ;
+                SourceExpr="Duty Unit Conversion" }
+
+    { 1000000045;2;Field  ;
+                SourceExpr="Country/Region Purchased Code" }
+
+    { 1000000046;2;Field  ;
+                SourceExpr="Budget Quantity" }
+
+    { 1000000047;2;Field  ;
+                SourceExpr="Budgeted Amount" }
+
+    { 1000000048;2;Field  ;
+                SourceExpr="Budget Profit" }
+
+    { 1000000049;2;Field  ;
+                SourceExpr=Comment }
+
+    { 1000000050;2;Field  ;
+                SourceExpr=Blocked }
+
+    { 1000000051;2;Field  ;
+                SourceExpr="Cost is Posted to G/L" }
+
+    { 1000000052;2;Field  ;
+                SourceExpr="Last Date Modified" }
+
+    { 1000000053;2;Field  ;
+                SourceExpr="Last Time Modified" }
+
+    { 1000000054;2;Field  ;
+                SourceExpr="Date Filter" }
+
+    { 1000000055;2;Field  ;
+                SourceExpr="Global Dimension 1 Filter" }
+
+    { 1000000056;2;Field  ;
+                SourceExpr="Global Dimension 2 Filter" }
+
+    { 1000000057;2;Field  ;
+                SourceExpr="Location Filter" }
+
+    { 1000000058;2;Field  ;
+                SourceExpr=Inventory }
+
+    { 1000000059;2;Field  ;
+                SourceExpr="Net Invoiced Qty." }
+
+    { 1000000060;2;Field  ;
+                SourceExpr="Net Change" }
+
+    { 1000000061;2;Field  ;
+                SourceExpr="Purchases (Qty.)" }
+
+    { 1000000062;2;Field  ;
+                SourceExpr="Sales (Qty.)" }
+
+    { 1000000063;2;Field  ;
+                SourceExpr="Positive Adjmt. (Qty.)" }
+
+    { 1000000064;2;Field  ;
+                SourceExpr="Negative Adjmt. (Qty.)" }
+
+    { 1000000065;2;Field  ;
+                SourceExpr="Purchases (LCY)" }
+
+    { 1000000066;2;Field  ;
+                SourceExpr="Sales (LCY)" }
+
+    { 1000000067;2;Field  ;
+                SourceExpr="Positive Adjmt. (LCY)" }
+
+    { 1000000068;2;Field  ;
+                SourceExpr="Negative Adjmt. (LCY)" }
+
+    { 1000000069;2;Field  ;
+                SourceExpr="COGS (LCY)" }
+
+    { 1000000070;2;Field  ;
+                SourceExpr="Qty. on Purch. Order" }
+
+    { 1000000071;2;Field  ;
+                SourceExpr="Qty. on Sales Order" }
+
+    { 1000000072;2;Field  ;
+                SourceExpr="Price Includes VAT" }
+
+    { 1000000073;2;Field  ;
+                SourceExpr="Drop Shipment Filter" }
+
+    { 1000000074;2;Field  ;
+                SourceExpr="VAT Bus. Posting Gr. (Price)" }
+
+    { 1000000075;2;Field  ;
+                SourceExpr="Gen. Prod. Posting Group" }
+
+    { 1000000076;2;Field  ;
+                SourceExpr=Picture }
+
+    { 1000000077;2;Field  ;
+                SourceExpr="Transferred (Qty.)" }
+
+    { 1000000078;2;Field  ;
+                SourceExpr="Transferred (LCY)" }
+
+    { 1000000079;2;Field  ;
+                SourceExpr="Country/Region of Origin Code" }
+
+    { 1000000080;2;Field  ;
+                SourceExpr="Automatic Ext. Texts" }
+
+    { 1000000081;2;Field  ;
+                SourceExpr="No. Series" }
+
+    { 1000000082;2;Field  ;
+                SourceExpr="Tax Group Code" }
+
+    { 1000000083;2;Field  ;
+                SourceExpr="VAT Prod. Posting Group" }
+
+    { 1000000084;2;Field  ;
+                SourceExpr=Reserve }
+
+    { 1000000085;2;Field  ;
+                SourceExpr="Reserved Qty. on Inventory" }
+
+    { 1000000086;2;Field  ;
+                SourceExpr="Reserved Qty. on Purch. Orders" }
+
+    { 1000000087;2;Field  ;
+                SourceExpr="Reserved Qty. on Sales Orders" }
+
+    { 1000000088;2;Field  ;
+                SourceExpr="Global Dimension 1 Code" }
+
+    { 1000000089;2;Field  ;
+                SourceExpr="Global Dimension 2 Code" }
+
+    { 1000000090;2;Field  ;
+                SourceExpr="Res. Qty. on Outbound Transfer" }
+
+    { 1000000091;2;Field  ;
+                SourceExpr="Res. Qty. on Inbound Transfer" }
+
+    { 1000000092;2;Field  ;
+                SourceExpr="Res. Qty. on Sales Returns" }
+
+    { 1000000093;2;Field  ;
+                SourceExpr="Res. Qty. on Purch. Returns" }
+
+    { 1000000094;2;Field  ;
+                SourceExpr="Stockout Warning" }
+
+    { 1000000095;2;Field  ;
+                SourceExpr="Prevent Negative Inventory" }
+
+    { 1000000096;2;Field  ;
+                SourceExpr="Cost of Open Production Orders" }
+
+    { 1000000097;2;Field  ;
+                SourceExpr="Application Wksh. User ID" }
+
+    { 1000000098;2;Field  ;
+                SourceExpr="Assembly Policy" }
+
+    { 1000000099;2;Field  ;
+                SourceExpr="Res. Qty. on Assembly Order" }
+
+    { 1000000100;2;Field  ;
+                SourceExpr="Res. Qty. on  Asm. Comp." }
+
+    { 1000000101;2;Field  ;
+                SourceExpr="Qty. on Assembly Order" }
+
+    { 1000000102;2;Field  ;
+                SourceExpr="Qty. on Asm. Component" }
+
+    { 1000000103;2;Field  ;
+                SourceExpr="Qty. on Job Order" }
+
+    { 1000000104;2;Field  ;
+                SourceExpr="Res. Qty. on Job Order" }
+
+    { 1000000105;2;Field  ;
+                SourceExpr=GTIN }
+
+    { 1000000106;2;Field  ;
+                SourceExpr="Default Deferral Template Code" }
+
+    { 1000000107;2;Field  ;
+                SourceExpr="Low-Level Code" }
+
+    { 1000000108;2;Field  ;
+                SourceExpr="Lot Size" }
+
+    { 1000000109;2;Field  ;
+                SourceExpr="Serial Nos." }
+
+    { 1000000110;2;Field  ;
+                SourceExpr="Last Unit Cost Calc. Date" }
+
+    { 1000000111;2;Field  ;
+                SourceExpr="Rolled-up Material Cost" }
+
+    { 1000000112;2;Field  ;
+                SourceExpr="Rolled-up Capacity Cost" }
+
+    { 1000000113;2;Field  ;
+                SourceExpr="Scrap %" }
+
+    { 1000000114;2;Field  ;
+                SourceExpr="Inventory Value Zero" }
+
+    { 1000000115;2;Field  ;
+                SourceExpr="Discrete Order Quantity" }
+
+    { 1000000116;2;Field  ;
+                SourceExpr="Minimum Order Quantity" }
+
+    { 1000000117;2;Field  ;
+                SourceExpr="Maximum Order Quantity" }
+
+    { 1000000118;2;Field  ;
+                SourceExpr="Safety Stock Quantity" }
+
+    { 1000000119;2;Field  ;
+                SourceExpr="Order Multiple" }
+
+    { 1000000120;2;Field  ;
+                SourceExpr="Safety Lead Time" }
+
+    { 1000000121;2;Field  ;
+                SourceExpr="Flushing Method" }
+
+    { 1000000122;2;Field  ;
+                SourceExpr="Replenishment System" }
+
+    { 1000000123;2;Field  ;
+                SourceExpr="Scheduled Receipt (Qty.)" }
+
+    { 1000000124;2;Field  ;
+                SourceExpr="Scheduled Need (Qty.)" }
+
+    { 1000000125;2;Field  ;
+                SourceExpr="Rounding Precision" }
+
+    { 1000000126;2;Field  ;
+                SourceExpr="Bin Filter" }
+
+    { 1000000127;2;Field  ;
+                SourceExpr="Variant Filter" }
+
+    { 1000000128;2;Field  ;
+                SourceExpr="Sales Unit of Measure" }
+
+    { 1000000129;2;Field  ;
+                SourceExpr="Purch. Unit of Measure" }
+
+    { 1000000130;2;Field  ;
+                SourceExpr="Time Bucket" }
+
+    { 1000000131;2;Field  ;
+                SourceExpr="Reserved Qty. on Prod. Order" }
+
+    { 1000000132;2;Field  ;
+                SourceExpr="Res. Qty. on Prod. Order Comp." }
+
+    { 1000000133;2;Field  ;
+                SourceExpr="Res. Qty. on Req. Line" }
+
+    { 1000000134;2;Field  ;
+                SourceExpr="Reordering Policy" }
+
+    { 1000000135;2;Field  ;
+                SourceExpr="Include Inventory" }
+
+    { 1000000136;2;Field  ;
+                SourceExpr="Manufacturing Policy" }
+
+    { 1000000137;2;Field  ;
+                SourceExpr="Rescheduling Period" }
+
+    { 1000000138;2;Field  ;
+                SourceExpr="Lot Accumulation Period" }
+
+    { 1000000139;2;Field  ;
+                SourceExpr="Dampener Period" }
+
+    { 1000000140;2;Field  ;
+                SourceExpr="Dampener Quantity" }
+
+    { 1000000141;2;Field  ;
+                SourceExpr="Overflow Level" }
+
+    { 1000000142;2;Field  ;
+                SourceExpr="Planning Transfer Ship. (Qty)." }
+
+    { 1000000143;2;Field  ;
+                SourceExpr="Planning Worksheet (Qty.)" }
+
+    { 1000000144;2;Field  ;
+                SourceExpr="Stockkeeping Unit Exists" }
+
+    { 1000000145;2;Field  ;
+                SourceExpr="Manufacturer Code" }
+
+    { 1000000146;2;Field  ;
+                SourceExpr="Item Category Code" }
+
+    { 1000000147;2;Field  ;
+                SourceExpr="Created From Nonstock Item" }
+
+    { 1000000148;2;Field  ;
+                SourceExpr="Product Group Code" }
+
+    { 1000000149;2;Field  ;
+                SourceExpr="Substitutes Exist" }
+
+    { 1000000150;2;Field  ;
+                SourceExpr="Qty. in Transit" }
+
+    { 1000000151;2;Field  ;
+                SourceExpr="Trans. Ord. Receipt (Qty.)" }
+
+    { 1000000152;2;Field  ;
+                SourceExpr="Trans. Ord. Shipment (Qty.)" }
+
+    { 1000000153;2;Field  ;
+                SourceExpr="Qty. Assigned to ship" }
+
+    { 1000000154;2;Field  ;
+                SourceExpr="Qty. Picked" }
+
+    { 1000000155;2;Field  ;
+                SourceExpr="Service Item Group" }
+
+    { 1000000156;2;Field  ;
+                SourceExpr="Qty. on Service Order" }
+
+    { 1000000157;2;Field  ;
+                SourceExpr="Res. Qty. on Service Orders" }
+
+    { 1000000158;2;Field  ;
+                SourceExpr="Item Tracking Code" }
+
+    { 1000000159;2;Field  ;
+                SourceExpr="Lot Nos." }
+
+    { 1000000160;2;Field  ;
+                SourceExpr="Expiration Calculation" }
+
+    { 1000000161;2;Field  ;
+                SourceExpr="Lot No. Filter" }
+
+    { 1000000162;2;Field  ;
+                SourceExpr="Serial No. Filter" }
+
+    { 1000000163;2;Field  ;
+                SourceExpr="Qty. on Purch. Return" }
+
+    { 1000000164;2;Field  ;
+                SourceExpr="Qty. on Sales Return" }
+
+    { 1000000165;2;Field  ;
+                SourceExpr="No. of Substitutes" }
+
+    { 1000000166;2;Field  ;
+                SourceExpr="Warehouse Class Code" }
+
+    { 1000000167;2;Field  ;
+                SourceExpr="Special Equipment Code" }
+
+    { 1000000168;2;Field  ;
+                SourceExpr="Put-away Template Code" }
+
+    { 1000000169;2;Field  ;
+                SourceExpr="Put-away Unit of Measure Code" }
+
+    { 1000000170;2;Field  ;
+                SourceExpr="Phys Invt Counting Period Code" }
+
+    { 1000000171;2;Field  ;
+                SourceExpr="Last Counting Period Update" }
+
+    { 1000000172;2;Field  ;
+                SourceExpr="Last Phys. Invt. Date" }
+
+    { 1000000173;2;Field  ;
+                SourceExpr="Use Cross-Docking" }
+
+    { 1000000174;2;Field  ;
+                SourceExpr="Next Counting Start Date" }
+
+    { 1000000175;2;Field  ;
+                SourceExpr="Next Counting End Date" }
+
+    { 1000000176;2;Field  ;
+                SourceExpr="Identifier Code" }
+
+    { 1000000177;2;Field  ;
+                SourceExpr="Routing No." }
+
+    { 1000000178;2;Field  ;
+                SourceExpr="Production BOM No." }
+
+    { 1000000179;2;Field  ;
+                SourceExpr="Single-Level Material Cost" }
+
+    { 1000000180;2;Field  ;
+                SourceExpr="Single-Level Capacity Cost" }
+
+    { 1000000181;2;Field  ;
+                SourceExpr="Single-Level Subcontrd. Cost" }
+
+    { 1000000182;2;Field  ;
+                SourceExpr="Single-Level Cap. Ovhd Cost" }
+
+    { 1000000183;2;Field  ;
+                SourceExpr="Single-Level Mfg. Ovhd Cost" }
+
+    { 1000000184;2;Field  ;
+                SourceExpr="Overhead Rate" }
+
+    { 1000000185;2;Field  ;
+                SourceExpr="Rolled-up Subcontracted Cost" }
+
+    { 1000000186;2;Field  ;
+                SourceExpr="Rolled-up Mfg. Ovhd Cost" }
+
+    { 1000000187;2;Field  ;
+                SourceExpr="Rolled-up Cap. Overhead Cost" }
+
+    { 1000000188;2;Field  ;
+                SourceExpr="Planning Issues (Qty.)" }
+
+    { 1000000189;2;Field  ;
+                SourceExpr="Planning Receipt (Qty.)" }
+
+    { 1000000190;2;Field  ;
+                SourceExpr="Planned Order Receipt (Qty.)" }
+
+    { 1000000191;2;Field  ;
+                SourceExpr="FP Order Receipt (Qty.)" }
+
+    { 1000000192;2;Field  ;
+                SourceExpr="Rel. Order Receipt (Qty.)" }
+
+    { 1000000193;2;Field  ;
+                SourceExpr="Planning Release (Qty.)" }
+
+    { 1000000194;2;Field  ;
+                SourceExpr="Planned Order Release (Qty.)" }
+
+    { 1000000195;2;Field  ;
+                SourceExpr="Purch. Req. Receipt (Qty.)" }
+
+    { 1000000196;2;Field  ;
+                SourceExpr="Purch. Req. Release (Qty.)" }
+
+    { 1000000197;2;Field  ;
+                SourceExpr="Order Tracking Policy" }
+
+    { 1000000198;2;Field  ;
+                SourceExpr="Prod. Forecast Quantity (Base)" }
+
+    { 1000000199;2;Field  ;
+                SourceExpr="Production Forecast Name" }
+
+    { 1000000200;2;Field  ;
+                SourceExpr="Component Forecast" }
+
+    { 1000000201;2;Field  ;
+                SourceExpr="Qty. on Prod. Order" }
+
+    { 1000000202;2;Field  ;
+                SourceExpr="Qty. on Component Lines" }
+
+    { 1000000203;2;Field  ;
+                SourceExpr=Critical }
+
+    { 1000000204;2;Field  ;
+                SourceExpr="Common Item No.";
+                Editable=FALSE }
+
+  }
+  CODE
+  {
+    VAR
+      Item@1000000000 : Record 27;
+      NumberOfCopies@1000000009 : Integer;
+      DataTextOption@1000000008 : 'Item No.,Item Description,Inventory,Unit Cost,Unit Price';
+      DataTextOption2@1000000007 : 'Item No.,Item Description,Inventory,Unit Cost,Unit Price,None';
+      DataTextOption3@1000000006 : 'Item No.,Item Description,Inventory,Unit Cost,Unit Price,None';
+      DataTypeOption@1000000005 : 'smalltext,mediumtext,bigtext,128-Barcode,QR-Code,EAN-13-Barcode,UPC-A-Barcode,EAN-8-Barcode,UPC-E-Barcode';
+      DataTypeOption2@1000000004 : 'smalltext,mediumtext,bigtext,128-Barcode,QR-Code,EAN-13-Barcode,UPC-A-Barcode,EAN-8-Barcode,UPC-E-Barcode';
+      DataTypeOption3@1000000003 : 'smalltext,mediumtext,bigtext,128-Barcode,QR-Code,EAN-13-Barcode,UPC-A-Barcode,EAN-8-Barcode,UPC-E-Barcode';
+      Prefix@1000000002 : Boolean;
+      Printer@1000000001 : Record 50000;
+      filterbuilder@1000000010 : FilterPageBuilder;
+      ChooseRow@1000000020 : 'Row1,Row2,Row3,All';
+      RowAdjustment@1000000021 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1";
+      RowX@1000000022 : Integer;
+      RowY@1000000023 : Integer;
+      Row1X@1000000011 : Integer;
+      Row2X@1000000012 : Integer;
+      Row3X@1000000013 : Integer;
+      Row1Y@1000000014 : Integer;
+      Row2Y@1000000016 : Integer;
+      Row3Y@1000000017 : Integer;
+      AllRowY@1000000018 : Integer;
+      AllRowX@1000000015 : Integer;
+      LastRow@1000000019 : Integer;
+      LabelprinterFunctions@1000000024 : Codeunit 95478;
+
+    PROCEDURE CallCodeUnit@1000000000(Option@1000000009 : Integer) returntext : Text[1024];
+    VAR
+      agreed@1000000007 : Boolean;
+      TextTypeList@1000000006 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1";
+      TextDataList@1000000005 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1";
+      Rows@1000000004 : Integer;
+      i@1000000003 : Integer;
+      PrefixText@1000000002 : Text[1024];
+      TextOptionList@1000000001 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1";
+      Position@1000000000 : Integer;
+      filtertextings@1000000010 : Text[1024];
+    BEGIN
+      MESSAGE('Callcodeunit');
+      ManageIndentOptions();
+      CurrPage.SETSELECTIONFILTER(Item);
+      agreed:=TRUE;
+      //If's to check for bad input
+      IF (Item.COUNT() > 1) THEN BEGIN
+          agreed := DIALOG.CONFIRM('You are about to print ' + FORMAT(Item.COUNT) + ' items.\' + 'Are you sure you want to continue?',TRUE);
+          //MESSAGE('Dont print dat much bruh');
+          //agreed:= FALSE;
+        END;
+        //MESSAGE('Item count: ' + FORMAT(Item.COUNT));
+      IF Item.COUNT = 0 THEN BEGIN
+          MESSAGE('Something needs to be inside the filter in order to print.');
+          agreed:= FALSE;
+        END;
+      IF NumberOfCopies < 1 THEN BEGIN
+        MESSAGE('Need at least one copy for the printer to print.');
+        agreed:= FALSE;
+      END;
+      //If dialog is successful, continue
+      IF agreed THEN BEGIN
+        Printer.SETRANGE(ID, Printer.ID, Printer.ID);
+        Printer.FINDSET;
+        IF Item.FINDSET THEN REPEAT
+          TextTypeList := TextTypeList.List;
+          TextDataList := TextDataList.List;
+
+          TextOptionList:=TextOptionList.List;
+          TextOptionList.Add(FORMAT(DataTextOption));
+          TextOptionList.Add(FORMAT(DataTextOption2));
+          TextOptionList.Add(FORMAT(DataTextOption3));
+
+          //Adds text to text list with or without the caption prefix
+          FOR i:= 0 TO TextOptionList.Count-1 DO BEGIN
+            Rows:=3;
+            IF NOT Prefix THEN BEGIN
+              CASE FORMAT(TextOptionList.Item(i)) OF
+                'None': TextDataList.Add('nonevoid');
+                'Item No.': TextDataList.Add(Item."No.");
+                'Item Description': TextDataList.Add(Item.Description);
+                'Inventory' : TextDataList.Add(Item.Inventory);
+                'Unit Cost':  TextDataList.Add(Item."Unit Cost");
+                'Unit Price':  TextDataList.Add(Item."Unit Price");
+              END;
+            END ELSE BEGIN
+              CASE FORMAT(TextOptionList.Item(i)) OF
+                'None': TextDataList.Add('nonevoid');
+                'Item No.': TextDataList.Add('Item No: '+FORMAT(Item."No."));
+                'Item Description': TextDataList.Add('Item Description: '+Item.Description);
+                'Inventory' : TextDataList.Add('Inventory: '+FORMAT(Item.Inventory));
+                'Unit Cost':  TextDataList.Add('Unit Cost: '+ FORMAT(Item."Unit Cost"));
+                'Unit Price':  TextDataList.Add('Unit Price: '+FORMAT(Item."Unit Price"));
+              END;
+            END;
+            END;
+
+          TextOptionList:=TextOptionList.List;
+          TextOptionList.Add(FORMAT(DataTypeOption));
+          TextOptionList.Add(FORMAT(DataTypeOption2));
+          TextOptionList.Add(FORMAT(DataTypeOption3));
+
+        //Adds the text types of the text elements to the text type list
+          FOR i:= 0 TO TextOptionList.Count-1 DO BEGIN
+            CASE FORMAT(TextOptionList.Item(i)) OF
+              'smalltext': TextTypeList.Add(1);
+              'mediumtext' : TextTypeList.Add(2);
+              'bigtext':  TextTypeList.Add(3);
+              '128-Barcode':  TextTypeList.Add(4);
+              'QR-Code':  TextTypeList.Add(5);
+              'EAN-13-Barcode': TextTypeList.Add(6);
+              'UPC-A-Barcode': TextTypeList.Add(7);
+              'EAN-8-Barcode': TextTypeList.Add(8);
+              'UPC-E-Barcode': TextTypeList.Add(9);
+              END;
+            END;
+
+
+        //Removes the prefix for special text types such as barcode and such
+       IF Prefix THEN BEGIN
+            FOR i:= 0 TO TextOptionList.Count-1 DO BEGIN
+            IF FORMAT(TextDataList.Item(i)) <> 'nonevoid' THEN BEGIN
+              IF (FORMAT(TextTypeList.Item(i)) >= '4') THEN BEGIN
+               Position := STRPOS(FORMAT(TextDataList.Item(i)),':') + 2;
+               TextDataList.Insert(i,FORMAT(COPYSTR(FORMAT(TextDataList.Item(i)),Position,STRLEN(FORMAT(TextDataList.Item(i))))));
+               TextDataList.RemoveAt(i+1);
+              END
+            END
+            END
+            END;
+        returntext:= LabelprinterFunctions.LabelStart(TextTypeList, TextDataList, NumberOfCopies,Printer,Option, RowAdjustment);
+
+
+
+        UNTIL (Item.NEXT = 0) OR (Option = 2);
+
+        END
+        ELSE BEGIN
+        MESSAGE('Print aborted');
+      END
+    END;
+
+    [Integration]
+    PROCEDURE Globalis@1000000001(id@1000000000 : Integer;path@1000000001 : Text[1024]);
+    BEGIN
+    END;
+
+    LOCAL PROCEDURE FillIndentList@1000000002();
+    BEGIN
+      MESSAGE('Filling indent list!');
+      RowAdjustment.Insert(0,Row1X);
+      RowAdjustment.Insert(1,Row1Y);
+      RowAdjustment.Insert(2,Row2X);
+      RowAdjustment.Insert(3,Row2Y);
+      RowAdjustment.Insert(4,Row3X);
+      RowAdjustment.Insert(5,Row3Y);
+      RowAdjustment.Insert(6,AllRowX);
+      RowAdjustment.Insert(7,AllRowY);
+    END;
+
+    LOCAL PROCEDURE ManageIndentOptions@1000000004();
+    BEGIN
+      MESSAGE('Managing indent options!');
+
+      CASE FORMAT(ChooseRow) OF
+        'Row1': BEGIN
+        Row1X := RowX;
+        Row1Y := RowY;
+        END;
+        'Row2': BEGIN
+        Row2X := RowX;
+        Row2Y := RowY;
+        END;
+        'Row3': BEGIN
+        Row3X := RowX;
+        Row3Y := RowY;
+        END;
+        'All': BEGIN
+        AllRowX := RowX;
+        AllRowY := RowY;
+        END;
+
+
+        END;
+      FillIndentList();
+    END;
+
+    BEGIN
+    END.
+  }
+}
+
+OBJECT Page 95479 LabelPictureCard
+{
+  OBJECT-PROPERTIES
+  {
+    Date=30-08-17;
+    Time=13:43:58;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table95478;
+    PageType=CardPart;
+    OnInit=BEGIN
+             picturelist := picturelist.List;
+           END;
+
+    OnClosePage=VAR
+                  PictureRecord@1000000000 : Record 95478;
+                  i@1000000001 : Integer;
+                BEGIN
+                  FOR i:=0 TO picturelist.Count-1 DO BEGIN
+                    PictureRecord.SETRANGE(id, picturelist.Item(i), picturelist.Item(i));
+                    PictureRecord.DELETEALL;
+                    END
+                END;
+
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=General;
+                GroupType=Group }
+
+    { 1000000002;2;Field  ;
+                Lookup=Yes;
+                SourceExpr=picture;
+                Style=Strong;
+                StyleExpr=TRUE;
+                Image=Calculator }
+
+  }
+  CODE
+  {
+    VAR
+      picturelist@1000000000 : DotNet "'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.System.Collections.Generic.List`1";
+
+    PROCEDURE Globalelite@1000000000(path@1000000001 : Text[1024]);
+    VAR
+      rand@1000000003 : Integer;
+      PictureRecord@1000000000 : Record 95478;
+    BEGIN
+
+      PictureRecord.INIT;
+      IF path <> '' THEN BEGIN
+        PictureRecord.picture.IMPORT(path);
+        END ELSE BEGIN
+
+          END;
+
+      PictureRecord.INSERT;
+
+      picturelist.Add(PictureRecord.id);
+
+      Rec.SETRANGE(id, PictureRecord.id, PictureRecord.id);
+
+      CurrPage.UPDATE(TRUE);
+    END;
+
+    BEGIN
+    END.
+  }
+}
+
+OBJECT Page 95568 Label Logo Page
+{
+  OBJECT-PROPERTIES
+  {
+    Date=01-09-17;
+    Time=14:41:02;
+    Modified=Yes;
+    Version List=;
+  }
+  PROPERTIES
+  {
+    SourceTable=Table95568;
+    PageType=List;
+    OnNewRecord=VAR
+                  LabelPrinterCodeUnit@1000000000 : Codeunit 95478;
+                BEGIN
+                  LabelPrinterCodeUnit.ImportPicture();
+                END;
+
+    ActionList=ACTIONS
+    {
+      { 1000000005;  ;ActionContainer;
+                      Name=ad;
+                      ActionContainerType=NewDocumentItems }
+      { 1000000006;1 ;Action    ;
+                      Name=fgh;
+                      OnAction=VAR
+                                 uuunit@1000000000 : Codeunit 95479;
+                               BEGIN
+                                 uuunit.RUN;
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1000000000;0;Container;
+                ContainerType=ContentArea }
+
+    { 1000000001;1;Group  ;
+                Name=Group;
+                GroupType=Repeater }
+
+    { 1000000002;2;Field  ;
+                SourceExpr=ID;
+                Enabled=FALSE }
+
+    { 1000000003;2;Field  ;
+                SourceExpr=LogoZPL;
+                Editable=FALSE }
+
+    { 1000000004;2;Field  ;
+                SourceExpr=Picture;
+                Editable=FALSE }
+
+  }
+  CODE
+  {
+
+    BEGIN
+    END.
+  }
+}
+
